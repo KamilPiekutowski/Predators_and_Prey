@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 
+
 int main()
 {
     // Create the main window
@@ -18,6 +19,7 @@ int main()
         sf::Event event;
         while (app.pollEvent(event))
         {
+            //PUT YOU MAIN HERE
             // Close window : exit
             if (event.type == sf::Event::Closed)
                 app.close();
@@ -35,3 +37,4 @@ int main()
 
     return EXIT_SUCCESS;
 }
+
