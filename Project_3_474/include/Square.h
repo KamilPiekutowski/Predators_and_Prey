@@ -2,8 +2,6 @@
 #define SQUARE_H
 #include <vector>
 #include "Living_Being.h"
-
-
 typedef struct Ordered_Pair_struct
 {
     int row;

@@ -33,14 +33,13 @@ void print_random_arrays(Ordered_Pair*,Ordered_Pair*,Ordered_Pair*,Ordered_Pair*
 void print_array(Ordered_Pair*,int);
 int get_num_turns();
 void failed_insert_sanity_check(string);
-void take_turn(Square **,int);
-void grass_turn(Square **,int,int);
+void take_turn(Square**);
+void grass_turn(Square**,int,int);
 void flower_turn(Square**,int,int);
 void rabbit_turn(Square**,int,int);
 void deer_turn(Square**,int,int);
 void wolf_turn(Square**,int,int);
 void bear_turn(Square**,int,int);
-////////////////////////////////////////////
 void remove_animal_from_square(Square **, int, int, string);
 void remove_being_from_square_sanity_check_fail(string);
 vector<Ordered_Pair> get_neighbors_that_have_only_plants(Square **, int, int);
@@ -74,7 +73,7 @@ void move_bear_to_new_square(Square**,Ordered_Pair,Bear*);
 void bear_eat(Square**,Ordered_Pair,Bear*);
 void bear_reproduce(Square**,int,int);
 bool is_prey_within_four_squares(Square**,int,int,Ordered_Pair);
-
+void reset_indices(Square**);
 
 int main()
 {
@@ -108,16 +107,15 @@ int main()
         // Update the window
         app.display();
     }
-
     return EXIT_SUCCESS;
 }
 
 void engine()
 {
-        // initialize the board
+    // initialize the board
     Square** board = initialize_board();
 
-        // create random arrays for the initial creation of the beings
+    // create random arrays for the initial creation of the beings
     Ordered_Pair* grass_array  = create_grass_array();
     Ordered_Pair* flower_array = create_flower_array(grass_array);
     Ordered_Pair* rabbit_array = create_rabbit_array();
@@ -146,13 +144,14 @@ void engine()
     int time = 0;
     while (time < num_turns)
     {
-        take_turn(board, time);
+        take_turn(board);
         time++;
     }
 }
 
-void take_turn(Square **board, int time)
+void take_turn(Square **board)
 {
+
     for (int row = 0; row < NUMROWS; row++)
     {
         for (int col = 0; col < NUMCOLS; col++)
@@ -238,6 +237,54 @@ void take_turn(Square **board, int time)
             cout << "\t\tEnd of move on\t(" << row << ", " << col << ")" << endl;
             print_value_of_square(board, row, col);
             cout << "**********************************************************" << endl;
+        }
+    }
+
+    //
+    // now that the round is done, we need to go back and reset all of the animals indices
+    //
+    cout << "End of round..." << endl;
+    reset_indices(board);
+}
+
+void reset_indices(Square **board)
+{
+    for (int row = 0; row < NUMROWS; row++)
+    {
+        for (int col = 0; col < NUMCOLS; col++)
+        {
+            if (board[row][col].get_rabbit() ||
+                board[row][col].get_grass_rabbit() ||
+                board[row][col].get_flower_rabbit())
+            {
+                Rabbit* r = (Rabbit*)board[row][col].get_animal();
+                r->set_index(0);
+                board[row][col].set_animal(r);
+            }
+            if (board[row][col].get_deer() ||
+                board[row][col].get_grass_deer() ||
+                board[row][col].get_flower_deer())
+            {
+                Deer *d = (Deer*)board[row][col].get_animal();
+                d->set_index(0);
+                board[row][col].set_animal(d);
+            }
+            if (board[row][col].get_wolf() ||
+                board[row][col].get_grass_wolf() ||
+                board[row][col].get_flower_wolf())
+            {
+                Wolf *w = (Wolf*)board[row][col].get_animal();
+                w->set_index(0);
+                board[row][col].set_animal(w);
+            }
+            if (board[row][col].get_bear() ||
+                board[row][col].get_grass_bear() ||
+                board[row][col].get_flower_bear())
+            {
+                Bear *b = (Bear*)board[row][col].get_animal();
+                b->set_index(0);
+                board[row][col].set_animal(b);
+            }
         }
     }
 }
@@ -418,7 +465,10 @@ void deer_turn(Square **board, int row, int col)
                 char direction = ' ';
                 if (!there_is_neighboring_predator(board, destination, neighboring_predator, direction))
                 {
-                    deer_eats(board, destination, d);
+                    if (d->get_curr_calories() < d->get_max_calories())
+                    {
+                        deer_eats(board, destination, d);
+                    }
                     if (will_reproduce_this_turn)
                     {
                         deer_reproduces(board, row, col);
@@ -481,8 +531,10 @@ void rabbit_turn(Square **board, int row, int col)
                 if (!there_is_neighboring_predator(board, destination, neighboring_predator, direction))
                 {
                     // next the rabbit needs to eat
-                    rabbit_eats(board, destination, r);
-
+                    if (r->get_curr_calories() < r->get_max_calories())
+                    {
+                        rabbit_eats(board, destination, r);
+                    }
 
                     // then the rabbit needs to reproduce
                     if (will_reproduce_this_turn)
@@ -1008,7 +1060,7 @@ void rabbit_eats(Square **board, Ordered_Pair dest, Rabbit *r)
 
     // find out what we're eating
     bool grass = true;
-    if (board[dest.row][dest.col].get_flower())
+    if (board[dest.row][dest.col].get_flower_rabbit())
     {
         grass = false;
     }
@@ -1017,8 +1069,8 @@ void rabbit_eats(Square **board, Ordered_Pair dest, Rabbit *r)
     if (grass)
     {
         // if the grass only has <= calories per grass, then we just kill the grass
-        Grass* g = (Grass*)board[dest.row][dest.col].get_animal();
-        if (g->get_curr_calories() <= max_to_eat)
+        Grass* g = (Grass*)board[dest.row][dest.col].get_plant();
+        if (g->get_curr_calories() <= curr_eat)
         {
             r->eat(g->get_curr_calories());
             remove_grass(board, dest);
@@ -1028,17 +1080,21 @@ void rabbit_eats(Square **board, Ordered_Pair dest, Rabbit *r)
         else
         {
             // first, get the number of calories per grass that we will eat extra
-            curr_eat+= g->get_curr_calories()/r->get_calories_per_20_grass();
-            if (max_to_eat > curr_eat) curr_eat = max_to_eat;
+            int x = g->get_curr_calories();
+            int y = r->get_calories_per_20_grass();
+            int extra = x/y;
+            curr_eat = curr_eat + extra;
             r->eat(curr_eat);
-            g->set_curr_calories(g->get_curr_calories()-max_to_eat);
+            g->set_curr_calories(g->get_curr_calories()-extra);
         }
     }
     else // we're eating flowers
     {
         // if the grass only has <= calories per grass, then we just kill the grass
-        Flower* f = (Flower*)board[dest.row][dest.col].get_animal();
-        if (f->get_curr_calories() <= max_to_eat)
+        Flower* f = (Flower*)board[dest.row][dest.col].get_plant();
+        int c = f->get_curr_calories();
+        int m = max_to_eat;
+        if (f->get_curr_calories() <= curr_eat)
         {
             r->eat(f->get_curr_calories());
             remove_flower(board, dest);
@@ -1048,10 +1104,12 @@ void rabbit_eats(Square **board, Ordered_Pair dest, Rabbit *r)
         else
         {
             // first, get the number of calories per grass that we will eat extra
-            curr_eat+= f->get_curr_calories()/r->get_calories_per_30_flowers();
-            if (max_to_eat > curr_eat) curr_eat = max_to_eat;
+            int x = f->get_curr_calories();
+            int y = r->get_calories_per_30_flowers();
+            int extra = x/y;
+            curr_eat = curr_eat + extra;
             r->eat(curr_eat);
-            f->set_curr_calories(f->get_curr_calories()-max_to_eat);
+            f->set_curr_calories(f->get_curr_calories()-extra);
         }
     }
 }
@@ -1061,15 +1119,15 @@ void deer_eats(Square **board, Ordered_Pair dest, Deer *d)
     int max_to_eat = d->get_max_calories()-d->get_curr_calories();
     int curr_eat = 5;
     bool grass = true;
-    if (board[dest.row][dest.col].get_flower())
+    if (board[dest.row][dest.col].get_flower_deer())
     {
         grass = false;
     }
     if (grass)
     {
         // if the grass only has <= calories per grass, then we just kill the grass
-        Grass* g = (Grass*)board[dest.row][dest.col].get_animal();
-        if (g->get_curr_calories() <= max_to_eat)
+        Grass* g = (Grass*)board[dest.row][dest.col].get_plant();
+        if (g->get_curr_calories() <= curr_eat)
         {
             d->eat(g->get_curr_calories());
             remove_grass(board, dest);
@@ -1079,17 +1137,19 @@ void deer_eats(Square **board, Ordered_Pair dest, Deer *d)
         else
         {
             // first, get the number of calories per grass that we will eat extra
-            curr_eat+= g->get_curr_calories()/d->get_calories_per_30_grass();
-            if (max_to_eat > curr_eat) curr_eat = max_to_eat;
+            int x = g->get_curr_calories();
+            int y = d->get_calories_per_30_grass();
+            int extra = x/y;
+            curr_eat = curr_eat + extra;
             d->eat(curr_eat);
-            g->set_curr_calories(g->get_curr_calories()-max_to_eat);
+            g->set_curr_calories(g->get_curr_calories()-extra);
         }
     }
     else // we're eating flowers
     {
         // if the grass only has <= calories per grass, then we just kill the grass
         Flower* f = (Flower*)board[dest.row][dest.col].get_animal();
-        if (f->get_curr_calories() <= max_to_eat)
+        if (f->get_curr_calories() <= curr_eat)
         {
             d->eat(f->get_curr_calories());
             remove_flower(board, dest);
@@ -1099,10 +1159,12 @@ void deer_eats(Square **board, Ordered_Pair dest, Deer *d)
         else
         {
             // first, get the number of calories per grass that we will eat extra
-            curr_eat+= f->get_curr_calories()/d->get_calories_per_40_flowers();
-            if (max_to_eat > curr_eat) curr_eat = max_to_eat;
+            int x = f->get_curr_calories();
+            int y = d->get_calories_per_40_flowers();
+            int extra = x/y;
+            curr_eat = curr_eat + extra;
             d->eat(curr_eat);
-            f->set_curr_calories(f->get_curr_calories()-max_to_eat);
+            f->set_curr_calories(f->get_curr_calories()-extra);
         }
     }
 }
@@ -1617,14 +1679,27 @@ void remove_animal_from_square(Square **board, int row, int col, string animal_t
     // remove the animal entirely
     board[row][col].set_animal(0);
 
-    //
-    // next, change the booleans in the square itself accordingly
-    //
-    if (board[row][col].get_rabbit() ||
-        board[row][col].get_deer()   ||
-        board[row][col].get_wolf()   ||
-        board[row][col].get_bear())
+    if (board[row][col].get_rabbit())
     {
+        board[row][col].set_rabbit(false);
+        board[row][col].set_empty(true);
+        board[row][col].set_identifier(' '); // set to empty
+    }
+    else if(board[row][col].get_deer())
+    {
+        board[row][col].set_deer(false);
+        board[row][col].set_empty(true);
+        board[row][col].set_identifier(' '); // set to empty
+    }
+    else if (board[row][col].get_wolf())
+    {
+        board[row][col].set_wolf(false);
+        board[row][col].set_empty(true);
+        board[row][col].set_identifier(' '); // set to empty
+    }
+    else if(board[row][col].get_bear())
+    {
+        board[row][col].set_bear(false);
         board[row][col].set_empty(true);
         board[row][col].set_identifier(' '); // set to empty
     }
@@ -1768,22 +1843,27 @@ void insert_beings_into_board(Square      **board,
                               Ordered_Pair *wolf,
                               Ordered_Pair *bear)
 {
+    // insert the plants
     for (int row = 0; row < NUMROWS; row++)
     {
         for (int col = 0; col < NUMCOLS; col++)
         {
-            // check to insert grass
             if (should_insert(board, grass, row, col, NUMGRASS))
             {
                 insert_grass(board, row, col);
             }
-
-            // check to insert flower
             if (should_insert(board, flower, row, col, NUMFLOWERS))
             {
                 insert_flower(board, row, col);
             }
+        }
+    }
 
+    // then insert the animals
+    for (int row = 0; row < NUMROWS; row++)
+    {
+        for (int col = 0; col < NUMCOLS; col++)
+        {
             // check to insert rabbit
             if (should_insert(board, rabbit, row, col, NUMRABBITS))
             {
@@ -1809,7 +1889,6 @@ void insert_beings_into_board(Square      **board,
             }
         }
     }
-
 
     cout << "After inserting everything into the board... is (0,0) have a piece?" << endl;
     print_board(board);
@@ -2216,6 +2295,10 @@ void print_value_of_square(Square **board, int row, int col)
     if (board[row][col].get_flower())        cout << "\t" << row << "," << col << " is flower()" << endl;
     if (board[row][col].get_empty())         cout << "\t" << row << "," << col << " is empty()" << endl;
 }
+
+
+
+
 
 
 

@@ -356,7 +356,7 @@ public:
 
     void hunger()
     {
-        cout << "The poor dear gets a little bit hungrier." << endl;
+        set_curr_calories(get_curr_calories() - get_metabolic_rate());
     }
 
     void move()
@@ -691,7 +691,7 @@ public:
 
     void hunger()
     {
-        cout << "The bear gets hungrier." << endl;
+        set_curr_calories(get_curr_calories() - get_metabolic_rate());
     }
 
     void move()
