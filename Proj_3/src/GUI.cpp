@@ -20,6 +20,7 @@ GUI::~GUI()
 
 void GUI::Run()
 {
+    sf::Clock deltaClock;
     while (app->isOpen())
     {
         // Process events
@@ -75,7 +76,17 @@ void GUI::Run()
             }
         }
 
-        step();
+        //setting steps to follow timer routine
+        sf::Time dt = deltaClock.getElapsedTime();
+        timer = dt.asMilliseconds();
+
+        if(timer > 16*10) { //need 16 for to get 60fps
+            cout << "Time:" << timer << endl;
+            timer = 0;
+            deltaClock.restart();
+            step();
+        }
+
         // Clear screen
         app->clear();
 
@@ -85,6 +96,7 @@ void GUI::Run()
         //app->draw(start->border);
         app->draw(start->text);
         // Update the windo
+
         drawGrid();
 
         //cout << "Ddraw " << endl;
@@ -98,9 +110,7 @@ void GUI::Run()
 //
 void GUI::step()
 {
-    for(int k = 0; k < 100000000;k++){
-        int a = 0;
-    }
+
     for (int row = 0; row < NUMROWS; row++)
     {
         for (int col = 0; col < NUMCOLS; col++)

@@ -26,6 +26,7 @@ typedef struct Ordered_Pair_struct
 class GUI
 {
     public:
+        int32_t timer = 0;
         GUI();
         virtual ~GUI();
         //methods
