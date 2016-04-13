@@ -172,15 +172,15 @@ void GUI::rabbit_turn(int row, int col)
        if (r->get_curr_age() >= r->get_max_age() || r->get_curr_calories() == 0)
        {
            r->die();
-           delete[] r;
+           delete[] &r;
            grid[row][col].set_animal(NULL);
 
            grid[row][col].a_id = ' ';
-           if (grid[row][col].a_id == 'G')
+           if (grid[row][col].p_id == 'G')
            {
                grid[row][col].tile.setColor(sf::Color::Green);
            }
-           if (grid[row][col].a_id == 'F')
+           else if (grid[row][col].p_id == 'F')
            {
                grid[row][col].tile.setColor(sf::Color::Yellow);
            }
@@ -228,18 +228,19 @@ void GUI::rabbit_turn(int row, int col)
                 neighboring_predator.col = -999;
                 neighboring_predator.row = -999;
                 char direction = ' ';
-                if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
-                {
-                    rabbit_eats(dest, r);
 
-                    if (will_reproduce_this_turn)
-                    {
-                        rabbit_reproduces(row, col);
-                    }
-                }
-                else
-                {
-                }
+               // if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
+                //{
+                    //rabbit_eats(dest, r);
+
+                    //if (will_reproduce_this_turn)
+                    //{
+                      //  rabbit_reproduces(row, col);
+                    //}
+                //}
+                //else
+                //{
+                //}
             }
        }
 
@@ -312,25 +313,27 @@ void GUI::rabbit_turn(int row, int col)
 void GUI::rabbit_reproduces(int row, int col)
 {
     // first we need to know if the baby rabbit will be created on a flower, grass, or empty
-    if (board[row][col].get_grass())
+    /*
+    if (grid[row][col].get_grass())
     {
-        board[row][col].set_grass(false);
-        board[row][col].set_grass_rabbit(true);
-        board[row][col].set_identifier('R');
+        grid[row][col].set_grass(false);
+        grid[row][col].set_grass_rabbit(true);
+        grid[row][col].set_identifier('R');
     }
-    else if (board[row][col].get_flower())
+    else if (grid[row][col].get_flower())
     {
-        board[row][col].set_flower(false);
-        board[row][col].set_flower_rabbit(true);
-        board[row][col].set_identifier('F');
+        grid[row][col].set_flower(false);
+        grid[row][col].set_flower_rabbit(true);
+        grid[row][col].set_identifier('F');
     }
-    else if(board[row][col].get_empty())
+    else if(grid[row][col].get_empty())
     {
-        board[row][col].set_empty(false);
-        board[row][col].set_rabbit(true);
-        board[row][col].set_identifier('r');
+        grid[row][col].set_empty(false);
+        grid[row][col].set_rabbit(true);
+        grid[row][col].set_identifier('r');
     }
-    board[row][col].set_animal(Living_Being_Factory::create_being('r'));
+    grid[row][col].set_animal(Living_Being_Factory::create_being('r'));
+    */
 }
 
 
