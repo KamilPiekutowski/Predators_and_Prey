@@ -82,7 +82,7 @@ void GUI::Run()
         sf::Time dt = deltaClock.getElapsedTime();
         timer = dt.asMilliseconds();
 
-        if(timer > 16*20) { //need 16 for to get 60fps
+        if(timer > 16*8) { //need 16 for to get 60fps
             //cout << "Time:" << timer << endl;
 
             timer = 0;
@@ -262,8 +262,9 @@ void GUI::rabbit_turn(int row, int col)
                if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
                 {
                     if(r->get_curr_calories() < r->get_max_calories()){
-                       // cout << "Rabbit cals:" << r->get_curr_calories() << endl;
+                        //cout << "Rabbit cals:" << r->get_curr_calories() << endl;
                         rabbit_eats(dest, r);
+                        //cout << "Rabbit done" << r->get_curr_calories() << endl;
 
                     }
 
@@ -372,9 +373,10 @@ void GUI::rabbit_reproduces(int row, int col)
 }
 
 
+
+
 void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
 {
-
     // get the number of calories that we can eat
     int curr_eat = 5;
 
@@ -385,30 +387,80 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
 
      if (grid[dest.row][dest.col].p_id == 'G')
      {
-        //cout << "g dest " << dest.col << "," << dest.row << endl;
         //if the grass only has <= calories per grass, then we just kill the grass
         Grass* g = (Grass*)grid[dest.row][dest.col].get_plant();
-        r->eat(5);
-        g->remove_calories(5);
+       // eat less than 5
+        if (g->get_curr_calories() <= curr_eat)
+        {
+            r->eat(g->get_curr_calories());
+            delete[] &g;
+            grid[dest.row][dest.col].set_plant(NULL);
+            grid[dest.row][dest.col].p_id = ' ';
+            //cout << "eating whats left" << f->get_curr_calories() << endl;
+            //grid[dest.row][dest.col].tile.setColor(sf::Color::Blue);
+        }
+        else {
+            int chunk = g->get_curr_calories() / 20;
+            chunk += 5;
+            if(chunk > (g->get_max_calories() - g->get_curr_calories()))
+            {
+                chunk = 5;
+            }
 
-     }
-     else if (grid[dest.row][dest.col].p_id == 'F')
+
+            cout << "grass" << chunk << endl;
+            //int new_cals = g->get_curr_calories() - chunk;
+            //g->set_curr_calories(new_cals);
+            g->remove_calories(chunk);
+            r->eat(chunk);
+            //cout << "eating 5" << endl;
+            cout << "from g " << g->get_curr_calories() << endl;
+        }
+
+    }
+
+    if (grid[dest.row][dest.col].p_id == 'F')
      {
         //if the grass only has <= calories per grass, then we just kill the grass
-        //cout << "f dest " << dest.col << "," << dest.row << endl;
         Flower* f = (Flower*)grid[dest.row][dest.col].get_plant();
-        r->eat(5);
-        f->get_curr_calories();
-        f->remove_calories(5);
+       // eat less than 5
+        if (f->get_curr_calories() <= curr_eat)
+        {
+            r->eat(f->get_curr_calories());
+            delete[] &f;
+            grid[dest.row][dest.col].set_plant(NULL);
+            grid[dest.row][dest.col].p_id = ' ';
+            //cout << "eating whats left" << f->get_curr_calories() << endl;
+            //grid[dest.row][dest.col].tile.setColor(sf::Color::Blue);
+        }
+        else {
+            int chunk = f->get_curr_calories() / 20;
+            chunk += 5;
+            if(chunk > (f->get_max_calories() - f->get_curr_calories()))
+            {
+                chunk = 5;
+            }
 
 
-     }
+            cout << "flower" << chunk << endl;
+            //int new_cals = g->get_curr_calories() - chunk;
+            //g->set_curr_calories(new_cals);
+            f->remove_calories(chunk);
+            r->eat(chunk);
+            //cout << "eating 5" << endl;
+            cout << "from f " << f->get_curr_calories() << endl;
+        }
 
-
-
+    }
 
 
 }
+
+
+
+
+
+
 
 
 bool GUI::there_is_neighboring_predator(Ordered_Pair dest, Ordered_Pair predator, char direction)
@@ -489,7 +541,7 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
     best_neighbor.row = -999;
     best_neighbor.col = 0;
     int calories = 0;
-
+    cout << "yield starts" << endl;
     for (unsigned int i = 0; i < neighbors.size(); i++){
 
         if(grid[neighbors[i].row][neighbors[i].col].a_id != ' '){
@@ -574,7 +626,7 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
 
     best_neighbor.row = neighbors[r].row;
     best_neighbor.col = neighbors[r].col;
-
+    cout << "yield ends" << endl;
     return best_neighbor;
 }
 
