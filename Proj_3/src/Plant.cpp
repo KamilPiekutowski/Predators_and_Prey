@@ -30,7 +30,7 @@ void Plant::die(){}
 void Plant::take_turn()
 {
     if (get_curr_calories() < get_max_calories())
-    {eat(0);}
+    {eat(1);}
 }
 
 

@@ -77,7 +77,7 @@ void GUI::Run()
                 start->text.setColor(sf::Color::White);
             }
         }
-        cout << "timer start" << endl;
+
         //setting steps to follow timer routine
         sf::Time dt = deltaClock.getElapsedTime();
         timer = dt.asMilliseconds();
@@ -95,22 +95,17 @@ void GUI::Run()
         }
 
         // Clear screen
-        cout << "clear screen" << endl;
         app->clear();
 
         //app.draw(text);
         //app->draw(close->border);
-        cout << "draw" << endl;
         app->draw(close->text);
         //app->draw(start->border);
         app->draw(start->text);
         // Update the windo
-        cout << "grid" << endl;
         drawGrid();
-        cout << "disp" << endl;
         //cout << "Ddraw " << endl;
         app->display();
-        cout << "disp end" << endl;
     }
 
 }
@@ -129,12 +124,12 @@ void GUI::step()
             {
 
                 grid[row][col].get_plant()->take_turn();
-                cout << "plant turn end" << endl;
+                //cout << "plant turn end" << endl;
             }
 
             if (grid[row][col].a_id != ' ')
             {
-                cout << "animal turn start" << endl;
+                //cout << "animal turn start" << endl;
                 animal_turn(row, col, grid[row][col].a_id);
 
             }
@@ -269,7 +264,7 @@ void GUI::rabbit_turn(int row, int col)
                     if(r->get_curr_calories() < r->get_max_calories()){
                        // cout << "Rabbit cals:" << r->get_curr_calories() << endl;
                         rabbit_eats(dest, r);
-                        cout << "rabbit ate" << endl;
+
                     }
 
 
@@ -390,7 +385,7 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
 
      if (grid[dest.row][dest.col].p_id == 'G')
      {
-        cout << "g dest " << dest.col << "," << dest.row << endl;
+        //cout << "g dest " << dest.col << "," << dest.row << endl;
         //if the grass only has <= calories per grass, then we just kill the grass
         Grass* g = (Grass*)grid[dest.row][dest.col].get_plant();
         r->eat(5);
@@ -400,19 +395,18 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
      else if (grid[dest.row][dest.col].p_id == 'F')
      {
         //if the grass only has <= calories per grass, then we just kill the grass
-        cout << "f dest " << dest.col << "," << dest.row << endl;
+        //cout << "f dest " << dest.col << "," << dest.row << endl;
         Flower* f = (Flower*)grid[dest.row][dest.col].get_plant();
         r->eat(5);
         f->get_curr_calories();
-        cout << "remove call" << endl;
         f->remove_calories(5);
-        cout << "remove call done" << endl;
+
 
      }
 
 
 
-    cout << "done eating" << endl;
+
 
 }
 
@@ -497,13 +491,13 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
     int calories = 0;
 
     for (unsigned int i = 0; i < neighbors.size(); i++){
-     cout << "Yield starts" << endl;
+
         if(grid[neighbors[i].row][neighbors[i].col].a_id != ' '){
             cout << "Animal detected in the pool of moves" << endl;
             cout << "Exiting program." << endl;
             exit(EXIT_FAILURE);
         }
-        cout << "Yield ends" << endl;
+
     }
     // go through each square and get the plant with the highest yield
     for (unsigned int i = 0; i < neighbors.size(); i++)
