@@ -36,6 +36,9 @@ void Rabbit::die(){}
 void Rabbit::hunger()
 {
     set_curr_calories(get_curr_calories() - get_metabolic_rate());
+    if(get_curr_calories() < 0) {
+        set_curr_calories(0);
+    }
 }
 void Rabbit::move(){}
 void Rabbit::reproduce(){}

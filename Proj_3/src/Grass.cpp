@@ -6,7 +6,7 @@ using namespace std;
 Grass::Grass()
 {
     max_calories  = 100;
-    curr_calories = 30;
+    curr_calories = 25;
     identifier = 'G';
 }
 
@@ -35,5 +35,10 @@ void Grass::die(){}
 void Grass::take_turn()
 {
     if (get_curr_calories() < get_max_calories())
-    {eat(1);}
+    {eat(0);}
+}
+
+void Grass::remove_calories(int c)
+{
+    set_curr_calories(get_curr_calories() - c);
 }
