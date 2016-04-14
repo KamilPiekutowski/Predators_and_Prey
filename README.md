@@ -5,3 +5,6 @@ It is a predor/prey graphical simulation using graphic GUI driven by SFML librar
 
 ## Authors
 Robert Hayhurst/Kamil Piekutowski
+
+###IDE
+Code::Blocks
