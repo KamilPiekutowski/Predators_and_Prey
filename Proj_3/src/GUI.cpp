@@ -11,6 +11,7 @@ GUI::GUI()
     app = new sf::RenderWindow(sf::VideoMode(800, 700), "SFML window");
     srand (time(NULL));
     populate_grid();
+    //print_ASCII('a');
 }
 
 GUI::~GUI()
@@ -80,11 +81,13 @@ void GUI::Run()
         sf::Time dt = deltaClock.getElapsedTime();
         timer = dt.asMilliseconds();
 
-        if(timer > 16*10) { //need 16 for to get 60fps
-            cout << "Time:" << timer << endl;
+        if(timer > 16*40) { //need 16 for to get 60fps
+            //cout << "Time:" << timer << endl;
             timer = 0;
             deltaClock.restart();
             step();
+            //print_ASCII('a');
+
         }
 
         // Clear screen
@@ -177,7 +180,7 @@ void GUI::rabbit_turn(int row, int col)
        r->set_move_made(true);
 
        r->hunger();
-       r->age();
+       //r->age();
 
        if (r->get_curr_age() >= r->get_max_age() || r->get_curr_calories() == 0)
        {
@@ -239,15 +242,15 @@ void GUI::rabbit_turn(int row, int col)
                 neighboring_predator.row = -999;
                 char direction = ' ';
 
-               // if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
-                //{
+               if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
+                {
                     //rabbit_eats(dest, r);
 
                     //if (will_reproduce_this_turn)
                     //{
                       //  rabbit_reproduces(row, col);
                     //}
-                //}
+                }
                 //else
                 //{
                 //}
@@ -361,6 +364,7 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
     }
 
     // next, let's eat grass
+
     if (grass)
     {
         // if the grass only has <= calories per grass, then we just kill the grass
@@ -369,10 +373,10 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
         if (g->get_curr_calories() <= max_to_eat)
         {
             r->eat(g->get_curr_calories());
-            delete[] g;
+            delete[] &g;
             grid[dest.row][dest.col].set_plant(NULL);
             grid[dest.row][dest.col].p_id = ' ';
-            grid[dest.row][dest.col].tile.setColor(sf::Color::Magenta);
+            grid[dest.row][dest.col].tile.setColor(sf::Color::Black);
         }
 
             // else we can eat the grass, but there will still be grass left
@@ -385,14 +389,17 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
             g->set_curr_calories(g->get_curr_calories()-max_to_eat);
         }
     }
+
+
     else // we're eating flowers
+
     {
         // if the grass only has <= calories per grass, then we just kill the grass
         Flower* f = (Flower*)grid[dest.row][dest.col].get_animal();
         if (f->get_curr_calories() <= max_to_eat)
         {
             r->eat(f->get_curr_calories());
-            delete[] f;
+            delete[] &f;
             grid[dest.row][dest.col].set_plant(NULL);
             grid[dest.row][dest.col].p_id = ' ';
             grid[dest.row][dest.col].tile.setColor(sf::Color::Magenta);
@@ -408,6 +415,7 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
             f->set_curr_calories(f->get_curr_calories()-max_to_eat);
         }
     }
+
 }
 
 
@@ -492,7 +500,7 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
     // go through each square and get the plant with the highest yield
     for (unsigned int i = 0; i < neighbors.size(); i++)
     {
-        if(grid[neighbors[i].row][neighbors[i].col].p_id == 'R')
+        if(grid[neighbors[i].row][neighbors[i].col].p_id == 'G')
         {
             Grass* g = (Grass*)grid[neighbors[i].row][neighbors[i].col].get_plant();
             if (g->get_curr_calories() > calories)
@@ -501,8 +509,25 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
                 best_neighbor.col = neighbors[i].col;
                 calories = g->get_curr_calories();
             }
+            else if(g->get_curr_calories() < calories){
+                    neighbors.erase(neighbors.begin() + i);
+                    --i;
+
+            }
         }
-        else if (grid[neighbors[i].row][neighbors[i].col].p_id == 'F')
+
+        if(grid[neighbors[i].row][neighbors[i].col].a_id != ' '){
+            cout << "Animal detected in the pool of moves" << endl;
+            cout << "Exiting program." << endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+
+
+
+    for (unsigned int i = 0; i < neighbors.size(); i++)
+    {
+        if(grid[neighbors[i].row][neighbors[i].col].p_id == 'F')
         {
             Flower* f = (Flower*)grid[neighbors[i].row][neighbors[i].col].get_plant();
             if (f->get_curr_calories() > calories)
@@ -511,69 +536,132 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
                 best_neighbor.col = neighbors[i].col;
                 calories = f->get_curr_calories();
             }
+            else if(f->get_curr_calories() < calories){
+                    neighbors.erase(neighbors.begin() + i);
+                    --i;
+
+            }
         }
-        else
-        {
-            cout << "FAILED SANITY CHECK in get_neighbor_with_highest_caloric_yield()." << endl;
-            cout << "All neighbors should have been vetted as flowers or grass only." << endl;
+
+        if(grid[neighbors[i].row][neighbors[i].col].a_id != ' '){
+            cout << "Animal detected in the pool of moves" << endl;
             cout << "Exiting program." << endl;
             exit(EXIT_FAILURE);
         }
     }
+
+
+
+    for(unsigned int i = 0;i < neighbors.size();++i){
+        int c = neighbors[i].col;
+        int r = neighbors[i].row;
+        cout << "[" << c << "][" << r << "]" << endl;
+
+    }
+
+    cout << "*******" << endl;
+
+    //choosing movement randomly
+    int r = rand() % neighbors.size();
+    best_neighbor.row = neighbors[r].row;
+    best_neighbor.col = neighbors[r].col;
+
     return best_neighbor;
 }
 
 vector<Ordered_Pair> GUI::get_neighbors_that_have_only_plants(int row, int col)
 {
-    vector<Ordered_Pair> neighbors;
-        // look up
-    if (row-1 >= 0)
-    {
-        if (grid[row-1][col].p_id == 'R'|| grid[row-1][col].p_id == 'F')
+    vector<Ordered_Pair> all_moves;
+
+    //start with right to corner to get all surrounding moves
+    /*
+        -1 0 1
+        +-+-+-+
+     -1 | | | |
+        +-+-+-+
+      0 | |R| |
+        +-+-+-+
+      1 | | | |
+        +-+-+-+
+    */
+    for(int i = 0;i < 3;++i)
+        for(int j = 0;j < 3;++j){
+            Ordered_Pair p;
+            p.col = i-1+col;
+            p.row = j-1+row;
+            all_moves.push_back(p);
+        }
+
+    //removing unwanted moves
+
+    for(unsigned int i = 0;i < all_moves.size();++i){
+        int c = all_moves[i].col;
+        int r = all_moves[i].row;
+
+
+
+        //removing spot where object resides
+        if(c == col && r == row){
+            //cout << "popping out center itself" << endl;
+            all_moves.erase(all_moves.begin() + i);
+            --i;
+
+        }
+    }
+    for(unsigned int i = 0;i < all_moves.size();++i){
+        int c = all_moves[i].col;
+        int r = all_moves[i].row;
+
+
+        //removing spot where object resides
+        if(c < 0 || r < 0 || c > NUMCOLS-1 || r > NUMROWS-1)
         {
-            Ordered_Pair above;
-            above.row = row-1;
-            above.col = col;
-            neighbors.push_back(above);
+           all_moves.erase(all_moves.begin() + i);
+            --i;
+
+        }
+    }
+    for(unsigned int i = 0;i < all_moves.size();++i){
+        int c = all_moves[i].col;
+        int r = all_moves[i].row;
+
+
+
+        //removing spot where object resides
+        if( grid[r][c].a_id != ' '){
+            all_moves.erase(all_moves.begin() + i);
+            --i;
+
         }
     }
 
-    // look down
-    if (row+1 < NUMROWS)
-    {
-        if (grid[row+1][col].p_id == 'R' || grid[row+1][col].p_id == 'F')
-        {
-            Ordered_Pair below;
-            below.row = row+1;
-            below.col = col;
-            neighbors.push_back(below);
-        }
-    }
 
-    // look left
-    if (col-1 >= 0)
-    {
-        if (grid[row][col-1].p_id == 'R' || grid[row][col-1].p_id == 'F')
-        {
-            Ordered_Pair left;
-            left.row = row;
-            left.col = col-1;
-            neighbors.push_back(left);
-        }
-    }
 
-    // look right
-    if (col+1 < NUMCOLS)
-    {
-        if (grid[row][col+1].p_id == 'R' || grid[row][col+1].p_id == 'F')
-        {
-            Ordered_Pair right;
-            right.row = row;
-            right.col = col+1;
-            neighbors.push_back(right);
-        }
+        //removing moves with other animals in
+     //   if( grid[r][c].a_id != ' '){
+     //       all_moves.erase(all_moves.begin() + i);
+     //       decrement = true;
+
+     //   }
+
+
+
+
+
+    //}
+/*
+    for(unsigned int i = 0;i < all_moves.size();++i){
+        cout << "[" << all_moves[i].col<< "][" << all_moves[i].row << "]" << endl;
     }
-    return neighbors;
+    cout << "*******" << endl;
+    cout << "occupied by:" << endl;
+    for(unsigned int i = 0;i < all_moves.size();++i){
+        int c = all_moves[i].col;
+        int r = all_moves[i].row;
+        cout << grid[r][c].a_id << endl;
+    }
+*/
+    return all_moves;
 }
 
 
@@ -709,3 +797,23 @@ Ordered_Pair* GUI::create_rabbit_array()
 }
 
 
+void GUI::print_ASCII(char type)
+{
+    if(type == 'p'){
+        for (int i = 0; i < NUMROWS;++i){
+            for(int j = 0;j < NUMCOLS;++j){
+                cout << "[" << grid[i][j].p_id << "]";
+            }
+            cout << endl;
+        }
+    }else {
+        for (int i = 0; i < NUMROWS;++i){
+            for(int j = 0;j < NUMCOLS;++j){
+                cout << "[" << grid[i][j].a_id << "]";
+            }
+            cout << endl;
+        }
+    }
+
+    cout << endl << endl;
+}

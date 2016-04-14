@@ -14,8 +14,8 @@
 #define NUMDEER     0 //5
 #define NUMWOLVES   0 //3
 #define NUMBEAR     0 //2
-#define NUMGRASS    999
-#define NUMFLOWERS  2 //200
+#define NUMGRASS    600
+#define NUMFLOWERS  0 //200
 
 typedef struct Ordered_Pair_struct
 {
@@ -52,6 +52,7 @@ class GUI
         bool there_is_neighboring_predator(Ordered_Pair,Ordered_Pair,char);
         void rabbit_eats(Ordered_Pair,Rabbit*);
         void rabbit_reproduces(int,int);
+        void print_ASCII(char);
     protected:
     private:
 

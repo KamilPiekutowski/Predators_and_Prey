@@ -6,7 +6,7 @@ using namespace std;
 Grass::Grass()
 {
     max_calories  = 100;
-    curr_calories = 20;
+    curr_calories = 30;
     identifier = 'G';
 }
 
