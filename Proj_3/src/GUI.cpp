@@ -12,7 +12,7 @@ GUI::GUI()
     app = new sf::RenderWindow(sf::VideoMode(800, 700), "SFML window");
     srand (time(NULL));
     populate_grid();
-    print_ASCII('p');
+    //print_ASCII('p');
 }
 
 GUI::~GUI()
@@ -53,6 +53,7 @@ void GUI::Run()
 
                 if(start->isHover(mousePos)){
                     cout << "Start simulation" << endl;
+                    this->isRunning = true;
                 }
 
             }
@@ -82,7 +83,7 @@ void GUI::Run()
         sf::Time dt = deltaClock.getElapsedTime();
         timer = dt.asMilliseconds();
 
-        if(timer > 16*8) { //need 16 for to get 60fps
+        if((timer > 16*8) && this->isRunning ) { //need 16 for to get 60fps
             //cout << "Time:" << timer << endl;
 
             timer = 0;
@@ -221,7 +222,7 @@ void GUI::rabbit_turn(int row, int col)
                 Ordered_Pair dest = get_neighbor_with_highest_caloric_yield(neighbors);
 
                 // next, will we reproduce in this turn
-                //bool will_reproduce_this_turn = determine_if_rabbit_will_reproduce(r);
+                bool will_reproduce_this_turn = determine_if_rabbit_will_reproduce(r);
                 //if (will_reproduce) cout << "Rabbit may be born" << endl;
 
                 // move to grid space
@@ -269,10 +270,10 @@ void GUI::rabbit_turn(int row, int col)
                     }
 
 
-                    //if (will_reproduce_this_turn)
-                    //{
-                      //  rabbit_reproduces(row, col);
-                    //}
+                    if (will_reproduce_this_turn)
+                    {
+                        rabbit_reproduces(row, col);
+                    }
                 }
                 //else
                 //{
@@ -408,13 +409,13 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
             }
 
 
-            cout << "grass" << chunk << endl;
+            //cout << "grass" << chunk << endl;
             //int new_cals = g->get_curr_calories() - chunk;
             //g->set_curr_calories(new_cals);
             g->remove_calories(chunk);
             r->eat(chunk);
             //cout << "eating 5" << endl;
-            cout << "from g " << g->get_curr_calories() << endl;
+            //cout << "from g " << g->get_curr_calories() << endl;
         }
 
     }
@@ -442,13 +443,13 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
             }
 
 
-            cout << "flower" << chunk << endl;
+            //cout << "flower" << chunk << endl;
             //int new_cals = g->get_curr_calories() - chunk;
             //g->set_curr_calories(new_cals);
             f->remove_calories(chunk);
             r->eat(chunk);
             //cout << "eating 5" << endl;
-            cout << "from f " << f->get_curr_calories() << endl;
+            //cout << "from f " << f->get_curr_calories() << endl;
         }
 
     }
@@ -541,7 +542,7 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
     best_neighbor.row = -999;
     best_neighbor.col = 0;
     int calories = 0;
-    cout << "yield starts" << endl;
+    //cout << "yield starts" << endl;
     for (unsigned int i = 0; i < neighbors.size(); i++){
 
         if(grid[neighbors[i].row][neighbors[i].col].a_id != ' '){
@@ -626,7 +627,7 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
 
     best_neighbor.row = neighbors[r].row;
     best_neighbor.col = neighbors[r].col;
-    cout << "yield ends" << endl;
+    //cout << "yield ends" << endl;
     return best_neighbor;
 }
 

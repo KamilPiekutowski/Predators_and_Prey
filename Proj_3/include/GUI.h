@@ -10,7 +10,7 @@
 // macros
 #define NUMROWS     30 //30
 #define NUMCOLS     40 //40
-#define NUMRABBITS  30 //15
+#define NUMRABBITS  300 //15
 #define NUMDEER     0 //5
 #define NUMWOLVES   0 //3
 #define NUMBEAR     0 //2
@@ -55,6 +55,7 @@ class GUI
         void print_ASCII(char);
     protected:
     private:
+        bool isRunning = false;
 
 };
 
