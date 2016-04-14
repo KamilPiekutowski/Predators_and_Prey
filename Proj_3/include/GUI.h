@@ -10,7 +10,7 @@
 // macros
 #define NUMROWS     30 //30
 #define NUMCOLS     40 //40
-#define NUMRABBITS  20 //15
+#define NUMRABBITS  30 //15
 #define NUMDEER     0 //5
 #define NUMWOLVES   0 //3
 #define NUMBEAR     0 //2
@@ -33,7 +33,7 @@ class GUI
         void Run();
         void drawGrid();
         void populate_grid();
-        Ordered_Pair* create_grass_array();
+        void create_grass_and_flowers();
         Ordered_Pair* create_rabbit_array();
         //members
         sf::RenderWindow *app;

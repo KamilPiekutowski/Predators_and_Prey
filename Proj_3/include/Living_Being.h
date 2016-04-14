@@ -5,19 +5,27 @@
 class Living_Being
 {
 private:
+    int curr_calories;
 
 
 public:
+    //getters
+    int get_curr_calories();
+    //setters
+    void set_curr_calories(int);
+    void remove_calories(int);
+
     virtual void eat(int) = 0;
     virtual void die() = 0;
     virtual void take_turn() = 0;
-    virtual char getIdentifier();
+    //virtual char getIdentifier() = 0;
+
 
 
     Living_Being();
     ~Living_Being();
 
-    char identifier;
+
 };
 
 class Mammal : public Living_Being

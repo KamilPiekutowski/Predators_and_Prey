@@ -62,6 +62,7 @@
 		<Unit filename="include/GUI.h" />
 		<Unit filename="include/Grass.h" />
 		<Unit filename="include/Living_Being.h" />
+		<Unit filename="include/Plant.h" />
 		<Unit filename="include/Rabbit.h" />
 		<Unit filename="include/Square.h" />
 		<Unit filename="include/TILE.h" />
@@ -72,6 +73,7 @@
 		<Unit filename="src/GUI.cpp" />
 		<Unit filename="src/Grass.cpp" />
 		<Unit filename="src/Living_Being.cpp" />
+		<Unit filename="src/Plant.cpp" />
 		<Unit filename="src/Rabbit.cpp" />
 		<Unit filename="src/Square.cpp" />
 		<Unit filename="src/TILE.cpp" />

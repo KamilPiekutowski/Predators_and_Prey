@@ -1,5 +1,6 @@
 #include "GUI.h"
 #include <iostream>
+#include <algorithm>
 #include <time.h>
 #include "Grass.h"
 #include "Flower.h"
@@ -76,34 +77,40 @@ void GUI::Run()
                 start->text.setColor(sf::Color::White);
             }
         }
-
+        cout << "timer start" << endl;
         //setting steps to follow timer routine
         sf::Time dt = deltaClock.getElapsedTime();
         timer = dt.asMilliseconds();
 
-        if(timer > 16*4) { //need 16 for to get 60fps
+        if(timer > 16*20) { //need 16 for to get 60fps
             //cout << "Time:" << timer << endl;
+
             timer = 0;
             deltaClock.restart();
+
             step();
+            cout << "STEP" << endl;
             //print_ASCII('a');
 
         }
 
         // Clear screen
+        cout << "clear screen" << endl;
         app->clear();
 
         //app.draw(text);
         //app->draw(close->border);
+        cout << "draw" << endl;
         app->draw(close->text);
         //app->draw(start->border);
         app->draw(start->text);
         // Update the windo
-
+        cout << "grid" << endl;
         drawGrid();
-
+        cout << "disp" << endl;
         //cout << "Ddraw " << endl;
         app->display();
+        cout << "disp end" << endl;
     }
 
 }
@@ -120,15 +127,20 @@ void GUI::step()
         {
             if (grid[row][col].p_id != ' ')
             {
+
                 grid[row][col].get_plant()->take_turn();
+                cout << "plant turn end" << endl;
             }
 
             if (grid[row][col].a_id != ' ')
             {
+                cout << "animal turn start" << endl;
                 animal_turn(row, col, grid[row][col].a_id);
+
             }
         }
     }
+
     for (int row = 0; row < NUMROWS; row++)
     {
         for (int col = 0; col < NUMCOLS; col++)
@@ -173,6 +185,7 @@ void GUI::animal_turn(int row, int col, char type)
 
 void GUI::rabbit_turn(int row, int col)
 {
+
     // get the rabbit, see if it's turn is finished
     Rabbit* r = (Rabbit*)grid[row][col].get_animal();
     if (!r->get_move_made())
@@ -205,29 +218,34 @@ void GUI::rabbit_turn(int row, int col)
        }
        else
        {
+
            vector<Ordered_Pair> neighbors = get_neighbors_that_have_only_plants(row, col);
             if (!neighbors.empty()) // else the turn ends
             {
+
                 Ordered_Pair dest = get_neighbor_with_highest_caloric_yield(neighbors);
 
                 // next, will we reproduce in this turn
-                bool will_reproduce_this_turn = determine_if_rabbit_will_reproduce(r);
+                //bool will_reproduce_this_turn = determine_if_rabbit_will_reproduce(r);
                 //if (will_reproduce) cout << "Rabbit may be born" << endl;
 
                 // move to grid space
+
                 grid[dest.row][dest.col].set_animal(r);
                 grid[dest.row][dest.col].a_id = 'R';
-                grid[dest.row][dest.col].tile.setColor(sf::Color::Magenta); // need to set colot if flower/grass
-                //grid[dest.row][dest.col].tile.setColor(sf::Color::Magenta);
+                grid[dest.row][dest.col].tile.setColor(sf::Color::Magenta);
+
+
                 grid[row][col].a_id = ' ';
                 grid[row][col].set_animal(NULL);
-                if (grid[row][col].p_id == 'F')
-                {
-                    grid[row][col].tile.setColor(sf::Color::Yellow);
-                }
-                else if(grid[row][col].p_id == 'G')
+                // need to set color if flower/grass
+                if (grid[row][col].p_id == 'G')
                 {
                     grid[row][col].tile.setColor(sf::Color::Green);
+                }
+                else if(grid[row][col].p_id == 'F')
+                {
+                    grid[row][col].tile.setColor(sf::Color::Yellow);
                 }
                 else{
                     grid[row][col].tile.setColor(sf::Color::Black);
@@ -251,6 +269,7 @@ void GUI::rabbit_turn(int row, int col)
                     if(r->get_curr_calories() < r->get_max_calories()){
                        // cout << "Rabbit cals:" << r->get_curr_calories() << endl;
                         rabbit_eats(dest, r);
+                        cout << "rabbit ate" << endl;
                     }
 
 
@@ -360,6 +379,7 @@ void GUI::rabbit_reproduces(int row, int col)
 
 void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
 {
+
     // get the number of calories that we can eat
     int curr_eat = 5;
 
@@ -370,75 +390,29 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
 
      if (grid[dest.row][dest.col].p_id == 'G')
      {
+        cout << "g dest " << dest.col << "," << dest.row << endl;
         //if the grass only has <= calories per grass, then we just kill the grass
         Grass* g = (Grass*)grid[dest.row][dest.col].get_plant();
-       // eat less than 5
-        if (g->get_curr_calories() <= curr_eat)
-        {
-            r->eat(g->get_curr_calories());
-            delete[] &g;
-            grid[dest.row][dest.col].set_plant(NULL);
-            grid[dest.row][dest.col].p_id = ' ';
-            //cout << "eating whats left" << f->get_curr_calories() << endl;
-            //grid[dest.row][dest.col].tile.setColor(sf::Color::Blue);
-        }
-        else {
-            int chunk = g->get_curr_calories() / 20;
-            chunk += 5;
-            if(chunk > (g->get_max_calories() - g->get_curr_calories()))
-            {
-                int    chunk = 5;
-            }
+        r->eat(5);
+        g->remove_calories(5);
 
-
-            cout << "Grass" << chunk << endl;
-            //int new_cals = g->get_curr_calories() - chunk;
-            //g->set_curr_calories(new_cals);
-            g->remove_calories(chunk);
-            r->eat(chunk);
-            //cout << "eating 5" << endl;
-            //cout << "from " << g->get_curr_calories() << endl;
-        }
-
-    }
-
-    if (grid[dest.row][dest.col].p_id == 'F')
+     }
+     else if (grid[dest.row][dest.col].p_id == 'F')
      {
         //if the grass only has <= calories per grass, then we just kill the grass
+        cout << "f dest " << dest.col << "," << dest.row << endl;
         Flower* f = (Flower*)grid[dest.row][dest.col].get_plant();
-       // eat less than 5
-        if (f->get_curr_calories() <= curr_eat)
-        {
-            r->eat(f->get_curr_calories());
-            delete[] &f;
-            grid[dest.row][dest.col].set_plant(NULL);
-            grid[dest.row][dest.col].p_id = ' ';
-            //cout << "eating whats left" << f->get_curr_calories() << endl;
-            //grid[dest.row][dest.col].tile.setColor(sf::Color::Blue);
-        }
-        else {
-            int chunk = f->get_curr_calories() / 20;
-            chunk += 5;
-            if(chunk > (f->get_max_calories() - f->get_curr_calories()))
-            {
-                int    chunk = 5;
-            }
+        r->eat(5);
+        f->get_curr_calories();
+        cout << "remove call" << endl;
+        f->remove_calories(5);
+        cout << "remove call done" << endl;
 
-
-            cout << "Grass" << chunk << endl;
-            //int new_cals = g->get_curr_calories() - chunk;
-            //g->set_curr_calories(new_cals);
-            //f->remove_calories(chunk);
-            r->eat(chunk);
-            //cout << "eating 5" << endl;
-            //cout << "from " << g->get_curr_calories() << endl;
-        }
-
-    }
+     }
 
 
 
-
+    cout << "done eating" << endl;
 
 }
 
@@ -521,6 +495,16 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
     best_neighbor.row = -999;
     best_neighbor.col = 0;
     int calories = 0;
+
+    for (unsigned int i = 0; i < neighbors.size(); i++){
+     cout << "Yield starts" << endl;
+        if(grid[neighbors[i].row][neighbors[i].col].a_id != ' '){
+            cout << "Animal detected in the pool of moves" << endl;
+            cout << "Exiting program." << endl;
+            exit(EXIT_FAILURE);
+        }
+        cout << "Yield ends" << endl;
+    }
     // go through each square and get the plant with the highest yield
     for (unsigned int i = 0; i < neighbors.size(); i++)
     {
@@ -539,40 +523,44 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
 
             }
         }
-
+/*
         if(grid[neighbors[i].row][neighbors[i].col].a_id != ' '){
             cout << "Animal detected in the pool of moves" << endl;
             cout << "Exiting program." << endl;
             exit(EXIT_FAILURE);
         }
+        */
     }
-
-
 
     for (unsigned int i = 0; i < neighbors.size(); i++)
     {
         if(grid[neighbors[i].row][neighbors[i].col].p_id == 'F')
         {
+
             Flower* f = (Flower*)grid[neighbors[i].row][neighbors[i].col].get_plant();
-            if (f->get_curr_calories() >= calories)
+            if (f->get_curr_calories() > calories)
             {
                 best_neighbor.row = neighbors[i].row;
                 best_neighbor.col = neighbors[i].col;
                 calories = f->get_curr_calories();
             }
+
             else if(f->get_curr_calories() < calories){
                     neighbors.erase(neighbors.begin() + i);
                     --i;
 
             }
+
         }
 
-        if(grid[neighbors[i].row][neighbors[i].col].a_id != ' '){
-            cout << "Animal detected in the pool of moves" << endl;
-            cout << "Exiting program." << endl;
-            exit(EXIT_FAILURE);
-        }
+
     }
+
+
+
+
+
+
 
 
 /*
@@ -709,46 +697,11 @@ void GUI::drawGrid(){
 void GUI::populate_grid()
 {
     // populates the grass
-    Ordered_Pair* grass = create_grass_array();
+    create_grass_and_flowers();
     Ordered_Pair* rabbit = create_rabbit_array();
-    for (int i = 0; i < NUMGRASS; i++)
-    {
-        Living_Being* g = new Grass();
-        int c = grass[i].col;
-        int r = grass[i].row;
 
-        sf::Vector2f v;
-        v.x = (c * TILE_SIZE);
-        v.y = (r * TILE_SIZE) + 100;
 
-        grid[r][c].set_plant(g);
-        grid[r][c].p_id = 'G';
-        grid[r][c].a_id = ' ';
 
-        grid[r][c].tile.setPostition(v);
-        grid[r][c].tile.setColor(sf::Color::Green);
-    }
-
-    // populates the flowers
-    for (int row = 0; row < NUMROWS; row++)
-    {
-        for (int col = 0; col < NUMCOLS; col++)
-        {
-            if (grid[row][col].p_id != 'G')
-            {
-               Living_Being* f = new Flower();
-               grid[row][col].set_plant(f);
-               grid[row][col].p_id = 'F';
-               grid[row][col].a_id = ' ';
-
-               sf::Vector2f v1;
-               v1.x = (col * TILE_SIZE);
-               v1.y = (row * TILE_SIZE) + 100;
-               grid[row][col].tile.setPostition(v1);
-               grid[row][col].tile.setColor(sf::Color::Yellow);
-            }
-        }
-    }
 
     for (int i = 0; i < NUMRABBITS; i++)
     {
@@ -771,9 +724,58 @@ void GUI::populate_grid()
     }
 }
 
-Ordered_Pair* GUI::create_grass_array()
+void GUI::create_grass_and_flowers()
 {
-    Ordered_Pair* grass = new Ordered_Pair[NUMGRASS];
+    //Ordered_Pair* grass = new Ordered_Pair[NUMGRASS];
+    vector<bool> pool(NUMCOLS*NUMROWS);
+    for (int i = 0;i < NUMGRASS;++i){
+        pool[i] = true;
+    }
+
+
+    std::random_shuffle ( pool.begin(), pool.end() );
+
+    //for(int i = 0; )
+
+    int counter = 0;
+    for(int r = 0; r < NUMROWS;++r){
+        for(int c = 0; c < NUMCOLS;++c){
+            if(pool[counter]){
+                Living_Being* g = new Grass();
+
+                sf::Vector2f v;
+                v.x = (c * TILE_SIZE);
+                v.y = (r * TILE_SIZE) + 100;
+
+                grid[r][c].set_plant(g);
+                grid[r][c].p_id = 'G';
+                grid[r][c].a_id = ' ';
+
+                grid[r][c].tile.setPostition(v);
+                grid[r][c].tile.setColor(sf::Color::Green);
+            }
+            else{
+                Living_Being* f = new Flower();
+
+                sf::Vector2f v;
+                v.x = (c * TILE_SIZE);
+                v.y = (r * TILE_SIZE) + 100;
+
+                grid[r][c].set_plant(f);
+                grid[r][c].p_id = 'F';
+                grid[r][c].a_id = ' ';
+
+                grid[r][c].tile.setPostition(v);
+                grid[r][c].tile.setColor(sf::Color::Yellow);
+
+            }
+            counter++;
+        }
+    }
+
+
+
+/*
     for (int i = 0; i < NUMGRASS; i++)
     {
         int row = rand()%NUMROWS;
@@ -794,7 +796,8 @@ Ordered_Pair* GUI::create_grass_array()
             grass[i].col = col;
         }
     }
-    return grass;
+    */
+    //return grass;
 }
 
 Ordered_Pair* GUI::create_rabbit_array()

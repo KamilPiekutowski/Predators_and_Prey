@@ -4,7 +4,7 @@ using namespace std;
 
 Living_Being::Living_Being()
 {
-    identifier = ' ';
+
 }
 
 Living_Being::~Living_Being()
@@ -12,12 +12,24 @@ Living_Being::~Living_Being()
     //dtor
 }
 
-char Living_Being::getIdentifier(){
-    return identifier;
-}
+
 
 void Living_Being::take_turn()
 {
     //cout << "Inside animal turn..." << endl;
 }
 
+
+int Living_Being::get_curr_calories()
+{
+    return curr_calories;
+}
+//setters
+void Living_Being::set_curr_calories(int c)
+{
+    curr_calories = c;
+}
+void Living_Being::remove_calories(int c)
+{
+    curr_calories = curr_calories - c;
+}

@@ -1,28 +1,13 @@
 #ifndef GRASS_H
 #define GRASS_H
 #include "Living_Being.h"
+#include "Plant.h"
 
-///////////// Plants //////////////////
-class Grass : public Living_Being
+
+class Grass : public Plant
 {
-private:
-    int max_calories;
-    int curr_calories;
-    int amount_to_eat = 1;
-    char identifier;
-
-public:
-    Grass();
-    ~Grass();
-
-    void set_curr_calories(int c);
-    int get_curr_calories();
-    int get_max_calories();
-    void set_max_calories(int c);
-    void remove_calories(int c);
-    void eat(int);
-    void die();
-    void take_turn();
-
+    public:
+        Grass();
+        ~Grass();
 };
 #endif // GRASS_H
