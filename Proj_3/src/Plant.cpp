@@ -33,4 +33,10 @@ void Plant::take_turn()
     {eat(1);}
 }
 
+void Plant::set_plant_rate(int r)
+{ plant_rate = r;}
+
+int Plant::get_plant_rate()
+{ return plant_rate;}
+
 

@@ -6,12 +6,13 @@
 #include "TILE.h"
 #include "Square.h"
 #include "Rabbit.h"
+#include "Factory.h"
 
 // macros
 #define NUMROWS     30 //30
 #define NUMCOLS     40 //40
-#define NUMRABBITS  300 //15
-#define NUMDEER     0 //5
+#define NUMRABBITS  10 //15
+#define NUMDEER     10 //5
 #define NUMWOLVES   0 //3
 #define NUMBEAR     0 //2
 #define NUMGRASS    600
@@ -35,6 +36,7 @@ class GUI
         void populate_grid();
         void create_grass_and_flowers();
         Ordered_Pair* create_rabbit_array();
+        Ordered_Pair* create_deer_array(Ordered_Pair*);
         //members
         sf::RenderWindow *app;
         textButton *close = new textButton("Close",24,5,10);
@@ -42,15 +44,13 @@ class GUI
         Square grid[NUMROWS][NUMCOLS];
         void step();
         void animal_turn(int,int,char);
-        void rabbit_turn(int,int);
-        void dear_turn(int,int);
-        void bear_turn(int,int);
-        void wolf_turn(int,int);
+        void herbivore_turn(int,int,char);
+        void carnivore_turn(int,int,char);
         vector<Ordered_Pair> get_neighbors_that_have_only_plants(int,int);
         Ordered_Pair get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>);
-        bool determine_if_rabbit_will_reproduce(Rabbit*);
+        bool determine_if_herbivore_will_reproduce(Herbivore*);
         bool there_is_neighboring_predator(Ordered_Pair,Ordered_Pair,char);
-        void rabbit_eats(Ordered_Pair,Rabbit*);
+        void herbivore_eats(Ordered_Pair,Herbivore*);
         void rabbit_reproduces(int,int);
         void print_ASCII(char);
     protected:

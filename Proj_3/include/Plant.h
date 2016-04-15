@@ -9,6 +9,7 @@ private:
     int max_calories;
     int curr_calories;
     int amount_to_eat = 1;
+    int plant_rate;
 
 
 public:
@@ -20,5 +21,8 @@ public:
     void eat(int);
     void die();
     void take_turn();
+    void set_plant_rate(int);
+    int get_plant_rate();
+
 };
 #endif // PLANT_H

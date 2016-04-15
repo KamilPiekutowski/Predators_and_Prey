@@ -4,6 +4,7 @@
 #include <time.h>
 #include "Grass.h"
 #include "Flower.h"
+#include "Deer.h"
 
 using namespace std;
 
@@ -12,7 +13,7 @@ GUI::GUI()
     app = new sf::RenderWindow(sf::VideoMode(800, 700), "SFML window");
     srand (time(NULL));
     populate_grid();
-    //print_ASCII('p');
+    //print_ASCII('a');
 }
 
 GUI::~GUI()
@@ -88,10 +89,9 @@ void GUI::Run()
 
             timer = 0;
             deltaClock.restart();
-
-            step();
-            cout << "STEP" << endl;
+            //cout << "STEP" << endl;
             //print_ASCII('a');
+            step();
 
         }
 
@@ -116,14 +116,12 @@ void GUI::Run()
 //
 void GUI::step()
 {
-
     for (int row = 0; row < NUMROWS; row++)
     {
         for (int col = 0; col < NUMCOLS; col++)
         {
             if (grid[row][col].p_id != ' ')
             {
-
                 grid[row][col].get_plant()->take_turn();
                 //cout << "plant turn end" << endl;
             }
@@ -132,7 +130,6 @@ void GUI::step()
             {
                 //cout << "animal turn start" << endl;
                 animal_turn(row, col, grid[row][col].a_id);
-
             }
         }
     }
@@ -141,13 +138,15 @@ void GUI::step()
     {
         for (int col = 0; col < NUMCOLS; col++)
         {
-            if (grid[row][col].a_id == 'R')
+            if ( grid[row][col].a_id == 'R' || grid[row][col].a_id == 'D')
             {
-                Rabbit* r = (Rabbit*)grid[row][col].get_animal();
+                Herbivore* r = (Herbivore*)grid[row][col].get_animal();
+                //print_ASCII('a');
                 r->set_move_made(false);
             }
             //
-            // change other bools later
+            // make change for carnivores here when we create the class
+            //
         }
     }
 }
@@ -158,46 +157,45 @@ void GUI::animal_turn(int row, int col, char type)
     {
     case('R'):
         {
-            rabbit_turn(row, col);
+           herbivore_turn(row, col, type);
             break;
         }
     case('D'):
         {
-            //deer_turn(row, col);
+            herbivore_turn(row, col, type);
             break;
         }
     case('B'):
         {
-            //bear_turn(row, col);
+            //carnivore_turn(row, col), type;
             break;
         }
     case('W'):
         {
-            //wolf_turn(row, col);
+            //carnivore_turn(row, col, type);
             break;
         }
     }
 }
 
-void GUI::rabbit_turn(int row, int col)
+void GUI::herbivore_turn(int row, int col, char type)
 {
 
     // get the rabbit, see if it's turn is finished
-    Rabbit* r = (Rabbit*)grid[row][col].get_animal();
-    if (!r->get_move_made())
+    Herbivore* h = (Herbivore*)grid[row][col].get_animal();
+    if (!h->get_move_made())
     {
-       r->set_move_made(true);
+       h->set_move_made(true);
 
-       r->hunger();
+       h->hunger();
        //r->age();
 
-       if (r->get_curr_age() >= r->get_max_age() || r->get_curr_calories() == 0)
+       if (h->get_curr_age() >= h->get_max_age() || h->get_curr_calories() == 0)
        {
-           r->die();
-           delete[] &r;
+           h->die();
+           delete[] &h;
            grid[row][col].set_animal(NULL);
-           cout << "Dead Rabbit" << endl;
-
+           //cout << "Dead Herbivore" << endl;
            grid[row][col].a_id = ' ';
            if (grid[row][col].p_id == 'G')
            {
@@ -214,7 +212,6 @@ void GUI::rabbit_turn(int row, int col)
        }
        else
        {
-
            vector<Ordered_Pair> neighbors = get_neighbors_that_have_only_plants(row, col);
             if (!neighbors.empty()) // else the turn ends
             {
@@ -222,19 +219,25 @@ void GUI::rabbit_turn(int row, int col)
                 Ordered_Pair dest = get_neighbor_with_highest_caloric_yield(neighbors);
 
                 // next, will we reproduce in this turn
-                bool will_reproduce_this_turn = determine_if_rabbit_will_reproduce(r);
+                bool will_reproduce_this_turn = determine_if_herbivore_will_reproduce(h);
                 //if (will_reproduce) cout << "Rabbit may be born" << endl;
 
                 // move to grid space
 
-                grid[dest.row][dest.col].set_animal(r);
-                grid[dest.row][dest.col].a_id = 'R';
-                grid[dest.row][dest.col].tile.setColor(sf::Color::Magenta);
+                grid[dest.row][dest.col].set_animal(h);
+                grid[dest.row][dest.col].a_id = type;
+                if (type == 'R')
+                {
+                   grid[dest.row][dest.col].tile.setColor(sf::Color::Magenta);
+                }
+                else
+                {
+                   grid[dest.row][dest.col].tile.setColor(sf::Color::Blue);
+                }
 
-
+                // change old grid square from herbivore to plant
                 grid[row][col].a_id = ' ';
                 grid[row][col].set_animal(NULL);
-                // need to set color if flower/grass
                 if (grid[row][col].p_id == 'G')
                 {
                     grid[row][col].tile.setColor(sf::Color::Green);
@@ -243,7 +246,8 @@ void GUI::rabbit_turn(int row, int col)
                 {
                     grid[row][col].tile.setColor(sf::Color::Yellow);
                 }
-                else{
+                else
+                {
                     grid[row][col].tile.setColor(sf::Color::Black);
                 }
 
@@ -262,18 +266,19 @@ void GUI::rabbit_turn(int row, int col)
 
                if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
                 {
-                    if(r->get_curr_calories() < r->get_max_calories()){
+                    if(h->get_curr_calories() < h->get_max_calories()){
                         //cout << "Rabbit cals:" << r->get_curr_calories() << endl;
-                        rabbit_eats(dest, r);
+                        herbivore_eats(dest, h);
                         //cout << "Rabbit done" << r->get_curr_calories() << endl;
 
                     }
 
-
+                    /*
                     if (will_reproduce_this_turn)
                     {
                         rabbit_reproduces(row, col);
                     }
+                    */
                 }
                 //else
                 //{
@@ -376,7 +381,7 @@ void GUI::rabbit_reproduces(int row, int col)
 
 
 
-void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
+void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
 {
     // get the number of calories that we can eat
     int curr_eat = 5;
@@ -386,24 +391,24 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
 
 
 
-     if (grid[dest.row][dest.col].p_id == 'G')
+     if (grid[dest.row][dest.col].p_id != ' ')
      {
         //if the grass only has <= calories per grass, then we just kill the grass
-        Grass* g = (Grass*)grid[dest.row][dest.col].get_plant();
+        Plant* p = (Plant*)grid[dest.row][dest.col].get_plant();
        // eat less than 5
-        if (g->get_curr_calories() <= curr_eat)
+        if (p->get_curr_calories() <= curr_eat)
         {
-            r->eat(g->get_curr_calories());
-            delete[] &g;
+            h->eat(p->get_curr_calories());
+            delete[] &p;
             grid[dest.row][dest.col].set_plant(NULL);
             grid[dest.row][dest.col].p_id = ' ';
             //cout << "eating whats left" << f->get_curr_calories() << endl;
             //grid[dest.row][dest.col].tile.setColor(sf::Color::Blue);
         }
         else {
-            int chunk = g->get_curr_calories() / 20;
+            int chunk = p->get_curr_calories() / p->get_plant_rate();
             chunk += 5;
-            if(chunk > (g->get_max_calories() - g->get_curr_calories()))
+            if(chunk > (p->get_max_calories() - p->get_curr_calories()))
             {
                 chunk = 5;
             }
@@ -412,47 +417,15 @@ void GUI::rabbit_eats(Ordered_Pair dest, Rabbit* r)
             //cout << "grass" << chunk << endl;
             //int new_cals = g->get_curr_calories() - chunk;
             //g->set_curr_calories(new_cals);
-            g->remove_calories(chunk);
-            r->eat(chunk);
+            p->remove_calories(chunk);
+            h->eat(chunk);
             //cout << "eating 5" << endl;
             //cout << "from g " << g->get_curr_calories() << endl;
         }
 
     }
 
-    if (grid[dest.row][dest.col].p_id == 'F')
-     {
-        //if the grass only has <= calories per grass, then we just kill the grass
-        Flower* f = (Flower*)grid[dest.row][dest.col].get_plant();
-       // eat less than 5
-        if (f->get_curr_calories() <= curr_eat)
-        {
-            r->eat(f->get_curr_calories());
-            delete[] &f;
-            grid[dest.row][dest.col].set_plant(NULL);
-            grid[dest.row][dest.col].p_id = ' ';
-            //cout << "eating whats left" << f->get_curr_calories() << endl;
-            //grid[dest.row][dest.col].tile.setColor(sf::Color::Blue);
-        }
-        else {
-            int chunk = f->get_curr_calories() / 20;
-            chunk += 5;
-            if(chunk > (f->get_max_calories() - f->get_curr_calories()))
-            {
-                chunk = 5;
-            }
 
-
-            //cout << "flower" << chunk << endl;
-            //int new_cals = g->get_curr_calories() - chunk;
-            //g->set_curr_calories(new_cals);
-            f->remove_calories(chunk);
-            r->eat(chunk);
-            //cout << "eating 5" << endl;
-            //cout << "from f " << f->get_curr_calories() << endl;
-        }
-
-    }
 
 
 }
@@ -522,12 +495,12 @@ bool GUI::there_is_neighboring_predator(Ordered_Pair dest, Ordered_Pair predator
 }
 
 
-bool GUI::determine_if_rabbit_will_reproduce(Rabbit* r)
+bool GUI::determine_if_herbivore_will_reproduce(Herbivore* h)
 {
-    if (r->get_curr_calories() >= r->get_min_age_to_reproduce() &&
-        r->get_curr_age() >= r->get_min_age_to_reproduce())
+    if (h->get_curr_calories() >= h->get_min_age_to_reproduce() &&
+        h->get_curr_age() >= h->get_min_age_to_reproduce())
     {
-        if (rand()%100+1 < r->get_reproductive_rate())
+        if (rand()%100+1 < h->get_reproductive_rate())
         {
             return true; // 50% chance of reproduction
         }
@@ -555,71 +528,23 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
     // go through each square and get the plant with the highest yield
     for (unsigned int i = 0; i < neighbors.size(); i++)
     {
-        if(grid[neighbors[i].row][neighbors[i].col].p_id == 'G')
+        if(grid[neighbors[i].row][neighbors[i].col].p_id != ' ')
         {
-            Grass* g = (Grass*)grid[neighbors[i].row][neighbors[i].col].get_plant();
-            if (g->get_curr_calories() > calories)
+            Plant* p = (Plant*)grid[neighbors[i].row][neighbors[i].col].get_plant();
+            if (p->get_curr_calories() > calories)
             {
                 best_neighbor.row = neighbors[i].row;
                 best_neighbor.col = neighbors[i].col;
-                calories = g->get_curr_calories();
+                calories = p->get_curr_calories();
             }
-            else if(g->get_curr_calories() < calories){
+            else if(p->get_curr_calories() < calories){
                     neighbors.erase(neighbors.begin() + i);
                     --i;
-
             }
         }
-/*
-        if(grid[neighbors[i].row][neighbors[i].col].a_id != ' '){
-            cout << "Animal detected in the pool of moves" << endl;
-            cout << "Exiting program." << endl;
-            exit(EXIT_FAILURE);
-        }
-        */
-    }
-
-    for (unsigned int i = 0; i < neighbors.size(); i++)
-    {
-        if(grid[neighbors[i].row][neighbors[i].col].p_id == 'F')
-        {
-
-            Flower* f = (Flower*)grid[neighbors[i].row][neighbors[i].col].get_plant();
-            if (f->get_curr_calories() > calories)
-            {
-                best_neighbor.row = neighbors[i].row;
-                best_neighbor.col = neighbors[i].col;
-                calories = f->get_curr_calories();
-            }
-
-            else if(f->get_curr_calories() < calories){
-                    neighbors.erase(neighbors.begin() + i);
-                    --i;
-
-            }
-
-        }
-
 
     }
 
-
-
-
-
-
-
-
-/*
-    for(unsigned int i = 0;i < neighbors.size();++i){
-        int c = neighbors[i].col;
-        int r = neighbors[i].row;
-        cout << "[" << c << "][" << r << "]" << endl;
-
-    }
-
-    cout << "*******" << endl;
-*/
     //choosing movement randomly
     int r = rand() % neighbors.size();
     //cout << "Random " << r << endl;
@@ -627,7 +552,7 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
 
     best_neighbor.row = neighbors[r].row;
     best_neighbor.col = neighbors[r].col;
-    //cout << "yield ends" << endl;
+    //cout << "pos: "<< best_neighbor.col << "," << best_neighbor.row << endl;
     return best_neighbor;
 }
 
@@ -655,74 +580,38 @@ vector<Ordered_Pair> GUI::get_neighbors_that_have_only_plants(int row, int col)
         }
 
     //removing unwanted moves
-
     for(unsigned int i = 0;i < all_moves.size();++i){
         int c = all_moves[i].col;
         int r = all_moves[i].row;
-
-
 
         //removing spot where object resides
         if(c == col && r == row){
             //cout << "popping out center itself" << endl;
             all_moves.erase(all_moves.begin() + i);
             --i;
-
         }
     }
     for(unsigned int i = 0;i < all_moves.size();++i){
         int c = all_moves[i].col;
         int r = all_moves[i].row;
-
 
         //removing spot where object resides
         if(c < 0 || r < 0 || c > NUMCOLS-1 || r > NUMROWS-1)
         {
            all_moves.erase(all_moves.begin() + i);
             --i;
-
         }
     }
     for(unsigned int i = 0;i < all_moves.size();++i){
         int c = all_moves[i].col;
         int r = all_moves[i].row;
-
-
 
         //removing spot where object resides
         if( grid[r][c].a_id != ' '){
             all_moves.erase(all_moves.begin() + i);
             --i;
-
         }
     }
-
-
-
-        //removing moves with other animals in
-     //   if( grid[r][c].a_id != ' '){
-     //       all_moves.erase(all_moves.begin() + i);
-     //       decrement = true;
-
-     //   }
-
-
-
-
-
-    //}
-/*
-    for(unsigned int i = 0;i < all_moves.size();++i){
-        cout << "[" << all_moves[i].col<< "][" << all_moves[i].row << "]" << endl;
-    }
-    cout << "*******" << endl;
-    cout << "occupied by:" << endl;
-    for(unsigned int i = 0;i < all_moves.size();++i){
-        int c = all_moves[i].col;
-        int r = all_moves[i].row;
-        cout << grid[r][c].a_id << endl;
-    }
-*/
     return all_moves;
 }
 
@@ -745,16 +634,16 @@ void GUI::populate_grid()
 {
     // populates the grass
     create_grass_and_flowers();
+
     Ordered_Pair* rabbit = create_rabbit_array();
-
-
-
+    Ordered_Pair* deer = create_deer_array(rabbit);
 
     for (int i = 0; i < NUMRABBITS; i++)
     {
         if (grid[rabbit[i].row][rabbit[i].col].a_id == ' ')
         {
-            Living_Being* r = new Rabbit();
+            Rabbit* r = (Rabbit*)Factory::create_being('R');
+            //Living_Being* r = new Rabbit();
             int col = rabbit[i].col;
             int row = rabbit[i].row;
             grid[row][col].a_id = 'R';
@@ -767,6 +656,26 @@ void GUI::populate_grid()
 
             grid[row][col].tile.setPostition(v);
             grid[row][col].tile.setColor(sf::Color::Magenta);
+        }
+    }
+
+    for (int i = 0; i < NUMDEER; i++)
+    {
+        if (grid[deer[i].row][deer[i].col].a_id == ' ')
+        {
+            Deer* d = (Deer*)Factory::create_being('D');
+            int col = deer[i].col;
+            int row = deer[i].row;
+            grid[row][col].a_id = 'D';
+
+            sf::Vector2f v;
+            v.x = (col * TILE_SIZE);
+            v.y = (row * TILE_SIZE) + 100;
+
+            grid[row][col].set_animal(d);
+
+            grid[row][col].tile.setPostition(v);
+            grid[row][col].tile.setColor(sf::Color::Blue);
         }
     }
 }
@@ -782,14 +691,14 @@ void GUI::create_grass_and_flowers()
 
     std::random_shuffle ( pool.begin(), pool.end() );
 
-    //for(int i = 0; )
+
 
     int counter = 0;
     for(int r = 0; r < NUMROWS;++r){
         for(int c = 0; c < NUMCOLS;++c){
-            if(pool[counter]){
-                Living_Being* g = new Grass();
-
+            if(pool[counter])
+            {
+                Grass* g = (Grass*)Factory::create_being('G');
                 sf::Vector2f v;
                 v.x = (c * TILE_SIZE);
                 v.y = (r * TILE_SIZE) + 100;
@@ -801,8 +710,10 @@ void GUI::create_grass_and_flowers()
                 grid[r][c].tile.setPostition(v);
                 grid[r][c].tile.setColor(sf::Color::Green);
             }
-            else{
-                Living_Being* f = new Flower();
+            else
+            {
+                Flower* f = (Flower*)Factory::create_being('F');
+              //  Living_Being* f = new Flower();
 
                 sf::Vector2f v;
                 v.x = (c * TILE_SIZE);
@@ -819,32 +730,41 @@ void GUI::create_grass_and_flowers()
             counter++;
         }
     }
+}
 
-
-
-/*
-    for (int i = 0; i < NUMGRASS; i++)
+Ordered_Pair* GUI::create_deer_array(Ordered_Pair* rabbit)
+{
+    Ordered_Pair* deer = new Ordered_Pair[NUMDEER];
+    for (int i = 0; i < NUMDEER; i++)
     {
         int row = rand()%NUMROWS;
         int col = rand()%NUMCOLS;
         bool is_unique_pair = true;
-        for (int j = 0; j < NUMGRASS; j++)
+        bool is_not_in_rabbit_array = true;
+        for (int j = 0; j < NUMDEER; j++)
         {
-            if (grass[j].col == col && grass[j].row == row)
+            if (deer[j].col == col && deer[j].row == row)
             {
                 is_unique_pair = false;
-                i--;
                 break;
             }
         }
-        if (is_unique_pair)
+        for (int k = 0; k < NUMRABBITS; k++)
         {
-            grass[i].row = row;
-            grass[i].col = col;
+            if (rabbit[k].col == col && rabbit[k].row == row)
+            {
+                is_not_in_rabbit_array = false;
+                break;
+            }
         }
+        if (is_unique_pair && is_not_in_rabbit_array)
+        {
+            deer[i].row = row;
+            deer[i].col = col;
+        }
+        else i--;
     }
-    */
-    //return grass;
+    return deer;
 }
 
 Ordered_Pair* GUI::create_rabbit_array()
