@@ -18,6 +18,13 @@
 #define NUMGRASS    700
 #define NUMFLOWERS  500 //200
 
+//reproduction rates
+/*
+    Note: the greater the number the slimmer chance
+*/
+#define RABBIT_REP_CHANCE 2
+#define DEER_REP_CHANCE 5
+
 typedef struct Ordered_Pair_struct
 {
     int row;

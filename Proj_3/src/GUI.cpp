@@ -13,7 +13,7 @@ GUI::GUI()
     app = new sf::RenderWindow(sf::VideoMode(800, 700), "SFML window");
     srand (time(NULL));
     populate_grid();
-    print_ASCII('p');
+    //print_ASCII('p');
 }
 
 GUI::~GUI()
@@ -84,7 +84,7 @@ void GUI::Run()
         sf::Time dt = deltaClock.getElapsedTime();
         timer = dt.asMilliseconds();
 
-        if((timer > 16*8) && this->isRunning ) { //need 16 for to get 60fps
+        if((timer > 16*10) && this->isRunning ) { //need 16 for to get 60fps
             //cout << "Time:" << timer << endl;
 
             timer = 0;
@@ -474,10 +474,10 @@ bool GUI::determine_if_herbivore_will_reproduce(Herbivore* h,char type)
         int pregnant = 0;
 
         if(type == 'D'){
-            pregnant = (rand()%3);
+            pregnant = (rand()%DEER_REP_CHANCE);
         }
         else if(type == 'R'){
-            pregnant = (rand()%1);
+            pregnant = (rand()%RABBIT_REP_CHANCE);
         }
         else{
             return false;
