@@ -1,16 +1,24 @@
 #ifndef LIVING_BEING_H
 #define LIVING_BEING_H
+#include <SFML/Graphics.hpp>
+
+
 
 
 class Living_Being
 {
 private:
     int curr_calories;
+    sf::Image image;
+    sf::Texture texture;
+
 
 
 public:
     //getters
     int get_curr_calories();
+    sf::Image* get_Image();
+    sf::Texture* get_texture();
     //setters
     void set_curr_calories(int);
     void remove_calories(int);

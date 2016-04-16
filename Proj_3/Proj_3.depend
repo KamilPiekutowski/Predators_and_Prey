@@ -454,7 +454,7 @@
 	<SFML/Graphics.hpp>
 	"GUI.h"
 
-1460773477 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\gui.h
+1460773966 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\gui.h
 	<SFML/Graphics.hpp>
 	<iostream>
 	"textButton.h"
@@ -470,11 +470,12 @@
 1460581810 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\tile.h
 	<SFML/Graphics.hpp>
 
-1460581810 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\square.h
+1460775019 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\square.h
 	"TILE.h"
 	"Living_Being.h"
 
-1460766453 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\living_being.h
+1460775131 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\living_being.h
+	<SFML/Graphics.hpp>
 
 1460766453 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\rabbit.h
 	"Herbivore.h"
@@ -519,7 +520,7 @@
 1460581810 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\tile.cpp
 	"TILE.h"
 
-1460773093 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
+1460773784 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
 	"GUI.h"
 	<iostream>
 	<algorithm>

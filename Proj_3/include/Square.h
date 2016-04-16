@@ -10,23 +10,7 @@ private:
     Living_Being* plant;
     Living_Being* animal;
 
-    /*
-    bool empty;
-    bool grass;
-    bool flower;
-    bool rabbit;
-    bool deer;
-    bool wolf;
-    bool bear;
-    bool grass_rabbit;
-    bool grass_deer;
-    bool grass_wolf;
-    bool grass_bear;
-    bool flower_rabbit;
-    bool flower_deer;
-    bool flower_wolf;
-    bool flower_bear;
-    */
+
 public:
     Square();
     ~Square();
