@@ -11,11 +11,11 @@
 // macros
 #define NUMROWS     30 //30
 #define NUMCOLS     40 //40
-#define NUMRABBITS  30 //15
-#define NUMDEER     30//5
+#define NUMRABBITS  2 //15
+#define NUMDEER     2//5
 #define NUMWOLVES   0 //3
 #define NUMBEAR     0 //2
-#define NUMGRASS    600
+#define NUMGRASS    1190
 #define NUMFLOWERS  0 //200
 
 typedef struct Ordered_Pair_struct
@@ -35,6 +35,7 @@ class GUI
         void drawGrid();
         void populate_grid();
         void create_grass_and_flowers();
+        void create_animals();
         Ordered_Pair* create_rabbit_array();
         Ordered_Pair* create_deer_array(Ordered_Pair*);
         //members

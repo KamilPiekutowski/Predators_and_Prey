@@ -454,7 +454,7 @@
 	<SFML/Graphics.hpp>
 	"GUI.h"
 
-1460786282 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\gui.h
+1460788446 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\gui.h
 	<SFML/Graphics.hpp>
 	<iostream>
 	"textButton.h"
@@ -523,7 +523,7 @@
 1460779489 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\tile.cpp
 	"TILE.h"
 
-1460786553 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
+1460788426 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
 	"GUI.h"
 	<iostream>
 	<algorithm>

@@ -657,7 +657,8 @@ void GUI::populate_grid()
 {
     // populates the grass
     create_grass_and_flowers();
-
+    create_animals();
+/*
     Ordered_Pair* rabbit = create_rabbit_array();
     Ordered_Pair* deer = create_deer_array(rabbit);
 
@@ -701,14 +702,23 @@ void GUI::populate_grid()
             grid[row][col].tile_a.setImage(d->get_Image());
         }
     }
+    */
 }
 
 void GUI::create_grass_and_flowers()
 {
     //Ordered_Pair* grass = new Ordered_Pair[NUMGRASS];
-    vector<bool> pool(NUMCOLS*NUMROWS);
-    for (int i = 0;i < NUMGRASS;++i){
-        pool[i] = true;
+    int size = NUMCOLS*NUMROWS;
+    vector<char> pool(size);
+    int i = 0;
+
+    //populating grass
+    for (i = 0;i < NUMGRASS;++i){
+        pool[i] = 'G';
+    }
+    //populating the rest flower
+    for (;i < size;++i){
+        pool[i] = 'F';
     }
 
 
@@ -719,38 +729,72 @@ void GUI::create_grass_and_flowers()
     int counter = 0;
     for(int r = 0; r < NUMROWS;++r){
         for(int c = 0; c < NUMCOLS;++c){
-            if(pool[counter])
-            {
-                Grass* g = (Grass*)Factory::create_being('G');
+
+                char type = pool[counter++];
+                Plant* g = (Plant*)Factory::create_being(type);
                 sf::Vector2f v;
                 v.x = (c * TILE_SIZE);
                 v.y = (r * TILE_SIZE) + 100;
 
                 grid[r][c].set_plant(g);
-                grid[r][c].p_id = 'G';
+                grid[r][c].p_id = type;
                 grid[r][c].a_id = ' ';
 
                 grid[r][c].tile_p.setPostition(v);
                 grid[r][c].tile_p.setImage(g->get_Image());
-            }
-            else
-            {
-                Flower* f = (Flower*)Factory::create_being('F');
-              //  Living_Being* f = new Flower();
 
-                sf::Vector2f v;
-                v.x = (c * TILE_SIZE);
-                v.y = (r * TILE_SIZE) + 100;
+            //counter++;
 
-                grid[r][c].set_plant(f);
-                grid[r][c].p_id = 'F';
-                grid[r][c].a_id = ' ';
+        }
+    }
+}
 
-                grid[r][c].tile_p.setPostition(v);
-                grid[r][c].tile_p.setImage(f->get_Image());
+void GUI::create_animals()
+{
+    //Ordered_Pair* grass = new Ordered_Pair[NUMGRASS];
+    int size = NUMCOLS*NUMROWS;
+    vector<char> pool(size);
+    int i = 0;
 
-            }
-            counter++;
+    int curr_size = NUMRABBITS;
+    //populating grass
+    for (i = 0;i < curr_size;++i){
+        pool[i] = 'R';
+    }
+
+    curr_size += NUMDEER;
+    //populating the rest flower
+    for (;i < curr_size;++i){
+        pool[i] = 'D';
+    }
+    for (;i < size;++i){
+        pool[i] = ' ';
+    }
+
+
+
+    std::random_shuffle ( pool.begin(), pool.end() );
+
+
+
+    int counter = 0;
+    for(int r = 0; r < NUMROWS;++r){
+        for(int c = 0; c < NUMCOLS;++c){
+
+                char type = pool[counter++];
+                if(type == 'R' || type == 'D'){
+                    Herbivore* h = (Herbivore*)Factory::create_being(type);
+                    sf::Vector2f v;
+                    v.x = (c * TILE_SIZE);
+                    v.y = (r * TILE_SIZE) + 100;
+
+                    grid[r][c].set_animal(h);
+                    grid[r][c].a_id = type;
+
+                    grid[r][c].tile_a.setPostition(v);
+                    grid[r][c].tile_a.setImage(h->get_Image());
+
+                }
 
         }
     }
