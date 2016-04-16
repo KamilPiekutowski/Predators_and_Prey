@@ -5,6 +5,8 @@
 #include "Flower.h"
 #include "Rabbit.h"
 #include "Deer.h"
+#include "Wolf.h"
+#include "Bear.h"
 #include "Empty.h"
 
 class Factory
@@ -34,7 +36,6 @@ public:
                 Living_Being* deer = new Deer();
                 return deer;
             }
-            /*
             case('W'):
             {
                 Living_Being* wolf = new Wolf();
@@ -45,7 +46,6 @@ public:
                 Living_Being* bear = new Bear();
                 return bear;
             }
-            */
             case('P'):
                 Living_Being* empty = new Empty();
                 return empty;

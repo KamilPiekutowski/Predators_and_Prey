@@ -44,6 +44,7 @@ class Mammal : public Living_Being
     virtual void reproduce() = 0;
     virtual void eat(int)       = 0;
     virtual void take_turn() = 0;
+
 };
 
 class Prey : public Mammal

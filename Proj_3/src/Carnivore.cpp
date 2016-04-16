@@ -63,6 +63,12 @@ int Carnivore::get_curr_calories()
 void Carnivore::set_curr_calories(int cc)
 { curr_calories = cc; }
 
+void Carnivore::set_min_calories_to_eat(int n)
+{ min_calories_to_eat = n;}
+
+int Carnivore::get_min_calories_to_eat()
+{ return min_calories_to_eat;}
+
 int Carnivore::get_metabolic_rate()
 { return metabolic_rate; }
 
@@ -104,3 +110,9 @@ bool Carnivore::get_is_pregnant()
 
 void Carnivore::set_is_pregnant(bool p)
 { is_pregnant = p;}
+
+void Carnivore::set_min_calories_to_hunt(int s)
+{   min_calories_to_hunt = s;}
+
+int Carnivore::get_min_calories_to_hunt()
+{   return min_calories_to_hunt;}

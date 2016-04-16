@@ -687,13 +687,15 @@
 	<SFML/Graphics.hpp>
 	"GUI.h"
 
-1460834537 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\gui.h
+1460851844 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\gui.h
 	<SFML/Graphics.hpp>
 	<iostream>
 	"textButton.h"
 	"TILE.h"
 	"Square.h"
 	"Rabbit.h"
+	"Wolf.h"
+	"Bear.h"
 	"Factory.h"
 
 1460832501 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\textbutton.h
@@ -707,7 +709,7 @@
 	"TILE.h"
 	"Living_Being.h"
 
-1460832501 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\living_being.h
+1460850214 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\living_being.h
 	<SFML/Graphics.hpp>
 
 1460832501 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\rabbit.h
@@ -718,12 +720,14 @@
 1460835286 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\herbivore.h
 	<Living_Being.h>
 
-1460832501 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\factory.h
+1460837548 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\factory.h
 	"Living_Being.h"
 	"Grass.h"
 	"Flower.h"
 	"Rabbit.h"
 	"Deer.h"
+	"Wolf.h"
+	"Bear.h"
 	"Empty.h"
 
 1460832501 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\grass.h
@@ -755,7 +759,7 @@
 1460832501 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\animals.h
 	"Living_Being.h"
 
-1460832501 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\deer.cpp
+1460847640 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\deer.cpp
 	"Deer.h"
 
 1460832501 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\empty.cpp
@@ -772,7 +776,7 @@
 	"Grass.h"
 	<iostream>
 
-1460834991 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\gui.cpp
+1460851858 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\gui.cpp
 	"GUI.h"
 	<iostream>
 	<algorithm>
@@ -780,6 +784,8 @@
 	"Grass.h"
 	"Flower.h"
 	"Deer.h"
+	"Wolf.h"
+	"Bear.h"
 
 1460835286 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\herbivore.cpp
 	"Herbivore.h"
@@ -793,10 +799,11 @@
 1460832501 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\plant.cpp
 	"Plant.h"
 
-1460832501 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\rabbit.cpp
+1460849162 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\rabbit.cpp
 	"Rabbit.h"
 	"Square.h"
 	<iostream>
+	"TILE.h"
 
 1460832501 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\square.cpp
 	"Square.h"
@@ -807,10 +814,26 @@
 1460832501 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\tile.cpp
 	"TILE.h"
 
-1460835322 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\carnivore.cpp
+1460836351 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\carnivore.cpp
 	"Carnivore.h"
 	<iostream>
 
-1460834993 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\carnivore.h
+1460836119 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\carnivore.h
 	<Living_Being.h>
+
+1460835477 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\wolf.h
+	"Carnivore.h"
+
+1460850924 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\wolf.cpp
+	"Wolf.h"
+	"TILE.h"
+	<iostream>
+
+1460850832 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\bear.cpp
+	"Bear.h"
+	"TILE.h"
+	<iostream>
+
+1460836682 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\bear.h
+	"Carnivore.h"
 

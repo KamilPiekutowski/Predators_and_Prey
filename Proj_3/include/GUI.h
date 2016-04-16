@@ -6,14 +6,16 @@
 #include "TILE.h"
 #include "Square.h"
 #include "Rabbit.h"
+#include "Wolf.h"
+#include "Bear.h"
 #include "Factory.h"
 
 // macros
 #define NUMROWS     30 //30
 #define NUMCOLS     40 //40
-#define NUMRABBITS  15 //15
-#define NUMDEER     5//5
-#define NUMWOLVES   5 //3
+#define NUMRABBITS  10 //15
+#define NUMDEER     0//5
+#define NUMWOLVES   20 //3
 #define NUMBEAR     0 //2
 #define NUMGRASS    1000
 #define NUMFLOWERS  200 //200
@@ -22,9 +24,12 @@
 /*
     Note: the greater the number the slimmer chance
 */
+/*
 #define RABBIT_REP_CHANCE 2
 #define DEER_REP_CHANCE 5
-
+#define WOLF_REP_CHANCE 2
+#define BEAR_REP_CHANCE 1
+*/
 typedef struct Ordered_Pair_struct
 {
     int row;
@@ -55,8 +60,10 @@ class GUI
         void herbivore_turn(int,int,char);
         void carnivore_turn(int,int,char);
         vector<Ordered_Pair> get_neighbors_that_have_only_plants(int,int);
+        vector<Ordered_Pair> get_neighbors_that_have_only_prey(int,int);
         Ordered_Pair get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>);
-        bool determine_if_herbivore_will_reproduce(Herbivore*,char);
+        void determine_if_herbivore_will_reproduce(Herbivore*,char);
+        void determine_if_carnivore_will_reproduce(Carnivore*,char);
         bool there_is_neighboring_predator(Ordered_Pair,Ordered_Pair,char);
         void herbivore_eats(Ordered_Pair,Herbivore*);
         //void herbivore_reproduces(int,int);

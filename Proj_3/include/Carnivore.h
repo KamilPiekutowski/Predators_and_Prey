@@ -13,6 +13,7 @@ private:
     // food-related variables
     int max_calories;
     int curr_calories;
+    int min_calories_to_eat;
     int metabolic_rate;
     int calories_per_rabbit;
     int calories_per_deer;
@@ -57,6 +58,8 @@ public:
     int get_curr_calories();
     void set_curr_calories(int);
     int get_metabolic_rate();
+    void set_min_calories_to_eat(int);
+    int get_min_calories_to_eat();
     void set_metabolic_rate(int);
     void set_calories_per_rabbit(int);
     int get_calories_per_rabbit();

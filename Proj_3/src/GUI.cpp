@@ -6,7 +6,7 @@
 #include "Flower.h"
 #include "Deer.h"
 #include "Wolf.h"
-
+#include "Bear.h"
 using namespace std;
 
 GUI::GUI()
@@ -17,10 +17,7 @@ GUI::GUI()
     //print_ASCII('p');
 }
 
-GUI::~GUI()
-{
-    //dtor
-}
+GUI::~GUI(){}
 
 void GUI::Run()
 {
@@ -145,6 +142,12 @@ void GUI::step()
                 //print_ASCII('a');
                 r->set_move_made(false);
             }
+            if ( grid[row][col].a_id == 'W' || grid[row][col].a_id == 'B')
+            {
+                Carnivore* r = (Carnivore*)grid[row][col].get_animal();
+                //print_ASCII('a');
+                r->set_move_made(false);
+            }
             //
             // make change for carnivores here when we create the class
             //
@@ -156,32 +159,108 @@ void GUI::animal_turn(int row, int col, char type)
 {
     switch(type)
     {
-    case('R'):
-        {
-           herbivore_turn(row, col, type);
-            break;
-        }
-    case('D'):
+        case('R'):
+        case('D'):
         {
             herbivore_turn(row, col, type);
             break;
         }
-    case('B'):
+        case('W'):
+        case('B'):
         {
-            //carnivore_turn(row, col), type;
-            break;
-        }
-    case('W'):
-        {
-            //carnivore_turn(row, col, type);
+            carnivore_turn(row, col, type);
             break;
         }
     }
 }
 
+void GUI::carnivore_turn(int row, int col, char type)
+{
+    Carnivore *c = (Carnivore*)grid[row][col].get_animal();
+    if (!c->get_move_made())
+    {
+       c->set_move_made(true);
+
+       c->hunger();
+       c->age();
+
+       // if animal dies of old age or starvation, deal with here
+       if (c->get_curr_age() >= c->get_max_age()/* || c->get_curr_calories() == 0*/)
+       {
+           cout << "Wolf dies of age: curr" << c->get_curr_age() << c->get_max_age() << endl;
+           c->die();
+           //delete[] &c;
+           //grid[row][col].set_animal(NULL);
+           //cout << "Dead Herbivore" << endl;
+           grid[row][col].a_id = ' ';
+           grid[row][col].tile_a.setColor(sf::Color::Transparent);
+       }
+       // else if we need to eat
+       else if (c->get_min_calories_to_eat() > c->get_curr_calories())
+       {
+            // if there is neighboring prey
+            vector<Ordered_Pair> neighbors = get_neighbors_that_have_only_prey(row, col);
+            if (!neighbors.empty())
+            {
+                cout << "Found prey" << endl;
+
+                // determine if carnivore will reproduce
+                determine_if_carnivore_will_reproduce(c,type);
+
+                // move to grid space
+                grid[neighbors.at(0).row][neighbors.at(0).col].set_animal(c);
+                grid[neighbors.at(0).row][neighbors.at(0).col].a_id = type;
+                if (type == 'W')
+                {
+                   sf::Vector2f v;
+                   v.x = (neighbors.at(0).col * TILE_SIZE);
+                   v.y = (neighbors.at(0).row* TILE_SIZE) + 100;
+
+                   grid[neighbors.at(0).row][neighbors.at(0).col].tile_a.setPostition(v);
+                   grid[neighbors.at(0).row][neighbors.at(0).col].tile_a.setImage(c->get_Image());
+                }
+                else if (type == 'B')
+                {
+                   sf::Vector2f v;
+                   v.x = (neighbors.at(0).col * TILE_SIZE);
+                   v.y = (neighbors.at(0).row * TILE_SIZE) + 100;
+
+                   grid[neighbors.at(0).row][neighbors.at(0).col].tile_a.setPostition(v);
+                   grid[neighbors.at(0).row][neighbors.at(0).col].tile_a.setImage(c->get_Image());
+                }
+
+                if (c->get_is_pregnant())
+                {
+
+
+                    c->set_is_pregnant(false);
+
+                    Carnivore* h = (Carnivore*)Factory::create_being(type);
+                    grid[row][col].a_id = type;
+
+                    sf::Vector2f v;
+                    v.x = (col * TILE_SIZE);
+                    v.y = (row * TILE_SIZE) + 100;
+
+                    grid[row][col].set_animal(h);
+
+                    grid[row][col].tile_a.setPostition(v);
+                    if(type == 'w'){
+                        grid[row][col].tile_a.setImage(c->get_Image());
+                    }
+                    else if(type == 'B '){
+                        grid[row][col].tile_a.setImage(c->get_Image());
+                    }
+
+                }
+            }
+       }
+ }
+}
+
+
 void GUI::herbivore_turn(int row, int col, char type)
 {
-
     // get the rabbit, see if it's turn is finished
     Herbivore* h = (Herbivore*)grid[row][col].get_animal();
     if (!h->get_move_made())
@@ -194,8 +273,8 @@ void GUI::herbivore_turn(int row, int col, char type)
        if (h->get_curr_age() >= h->get_max_age() || h->get_curr_calories() == 0)
        {
            h->die();
-           delete[] &h;
-           grid[row][col].set_animal(NULL);
+           //delete[] &h;
+           //grid[row][col].set_animal(NULL);
            //cout << "Dead Herbivore" << endl;
            grid[row][col].a_id = ' ';
            grid[row][col].tile_a.setColor(sf::Color::Transparent);
@@ -210,11 +289,10 @@ void GUI::herbivore_turn(int row, int col, char type)
                 Ordered_Pair dest = get_neighbor_with_highest_caloric_yield(neighbors);
 
                 // next, will we reproduce in this turn
-                bool will_reproduce_this_turn = determine_if_herbivore_will_reproduce(h,type);
+                determine_if_herbivore_will_reproduce(h,type);
                 //if (will_reproduce) cout << "Rabbit may be born" << endl;
 
                 // move to grid space
-
                 grid[dest.row][dest.col].set_animal(h);
                 grid[dest.row][dest.col].a_id = type;
                 if (type == 'R')
@@ -226,7 +304,7 @@ void GUI::herbivore_turn(int row, int col, char type)
                    grid[dest.row][dest.col].tile_a.setPostition(v);
                    grid[dest.row][dest.col].tile_a.setImage(h->get_Image());
                 }
-                else
+                else if (type == 'D')
                 {
                    sf::Vector2f v;
                    v.x = (dest.col * TILE_SIZE);
@@ -282,88 +360,21 @@ void GUI::herbivore_turn(int row, int col, char type)
                 char direction = ' ';
 
                if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
-                {
+               {
                     if(h->get_curr_calories() < h->get_max_calories()){
                         herbivore_eats(dest, h);
                     }
-                    if (will_reproduce_this_turn)
+                    /*
+                    if (h->get_is_pregnant())
                     {
-                        h->set_is_pregnant(true);
+                        h->set_is_pregnant(false);
                     }
-
-                }
-            }
+                    */
+               }
+           }
        }
-
     }
-
-/*
-    r->set_index(r->get_index()+1);
-    if (r->get_index()%2 == 1)
-    {
-        // run the hunger() method.  If the animal dies, end of turn
-        r->hunger();
-        r->age();
-        if (r->get_curr_calories() < 1 || r->get_curr_age() == r->get_max_age())
-        {
-            remove_animal_from_square(board, row, col, "rabbit");
-        }
-        else // the turn continues
-        {
-            // get the squares that it could possibly move to
-            vector<Ordered_Pair> neighbors = get_neighbors_that_have_only_plants(board, row, col);
-
-            if (!neighbors.empty()) // else the turn ends
-            {
-                // next we need to figure out the neighbor with the highest caloric yield
-                Ordered_Pair destination = get_neighbor_with_highest_caloric_yield(board, neighbors);
-
-                // next, will we reproduce in this turn
-                bool will_reproduce_this_turn = determine_if_rabbit_will_reproduce(r);
-
-                // next, we need to actually move to the destination
-                remove_animal_from_square(board, row, col, "rabbit");
-                move_rabbit_to_new_square(board, destination, r);
-
-
-                //
-                // now that we've moved there, we check for a neighboring predator.  If there
-                // is one, we flee.  If there is not, we eat, possibly reproduce, and end turn.
-                //
-                Ordered_Pair neighboring_predator;
-                neighboring_predator.col = -999;
-                neighboring_predator.row = -999;
-                char direction = ' ';
-                if (!there_is_neighboring_predator(board, destination, neighboring_predator, direction))
-                {
-                    // next the rabbit needs to eat
-                    rabbit_eats(board, destination, r);
-
-
-                    // then the rabbit needs to reproduce
-                    if (will_reproduce_this_turn)
-                    {
-                        rabbit_reproduces(board, row, col);
-                    }
-                }
-                else //  we need to flee
-                {
-                    // so we need to check if there is anything in two squares in the
-                    // OPPOSITE direction of the predator.
-                    if (rabbit_fleeing_is_option(board, destination, direction, r))
-                    {
-                        rabbit_flees(board, r, destination, direction);
-                    }
-                }
-            }
-        }
-    }
-    */
 }
-
-
-
-
 
 
 void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
@@ -467,29 +478,34 @@ bool GUI::there_is_neighboring_predator(Ordered_Pair dest, Ordered_Pair predator
 }
 
 
-bool GUI::determine_if_herbivore_will_reproduce(Herbivore* h,char type)
+void GUI::determine_if_carnivore_will_reproduce(Carnivore* c,char type)
 {
-    if (h->get_curr_calories() >= h->get_min_age_to_reproduce() &&
-        h->get_curr_age() >= h->get_min_age_to_reproduce())
+
+    if (c->get_curr_calories() >= c->get_min_calories_to_reproduce() &&
+    c->get_curr_age() >= c->get_min_age_to_reproduce())
     {
-        int pregnant = 0;
-
-        if(type == 'D'){
-            pregnant = (rand()%DEER_REP_CHANCE);
-        }
-        else if(type == 'R'){
-            pregnant = (rand()%RABBIT_REP_CHANCE);
-        }
-        else{
-            return false;
-        }
-
-        if (!pregnant)
+        int num =  rand()%100+1;
+        if (num < c->get_reproductive_rate())
         {
-            return true; // 50% chance of reproduction
+            c->set_is_pregnant(false);
         }
     }
-    return false;
+}
+
+void GUI::determine_if_herbivore_will_reproduce(Herbivore* h,char type)
+{
+
+    if (h->get_curr_calories() >= h->get_min_calories_to_reproduce() &&
+        h->get_curr_age() >= h->get_min_age_to_reproduce())
+    {
+        int num =  rand()%100+1;
+        if (num < h->get_reproductive_rate())
+        {
+            h->set_is_pregnant(true);
+        }
+    }
+
+
 }
 
 
@@ -539,60 +555,99 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
     return best_neighbor;
 }
 
+vector<Ordered_Pair> GUI::get_neighbors_that_have_only_prey(int row,int col)
+{
+    vector<Ordered_Pair> all_moves;
+    for(int i = 0;i < 3;++i)
+    {
+        for(int j = 0;j < 3;++j)
+        {
+            Ordered_Pair p;
+            p.col = i-1+col;
+            p.row = j-1+row;
+            all_moves.push_back(p);
+        }
+    }
+
+
+        //removing unwanted moves
+        for(unsigned int i = 0;i < all_moves.size();++i)
+        {
+            int c = all_moves[i].col;
+            int r = all_moves[i].row;
+
+            //removing spot where object resides
+            if( grid[r][c].a_id != 'R' || grid[r][c].a_id != 'D')
+            {
+                all_moves.erase(all_moves.begin() + i);
+                --i;
+            }
+        }
+
+   for (int i = 0; i < all_moves.size();++i){
+        int c = all_moves[i].col;
+        int r = all_moves[i].row;
+
+        cout << "Nearby" << i << ". " << grid[r][c].a_id << endl;
+
+    }
+    //cout << "********" << endl;
+
+    return all_moves;
+}
+
 vector<Ordered_Pair> GUI::get_neighbors_that_have_only_plants(int row, int col)
 {
     vector<Ordered_Pair> all_moves;
-
-    //start with right to corner to get all surrounding moves
-    /*
-        -1 0 1
-        +-+-+-+
-     -1 | | | |
-        +-+-+-+
-      0 | |R| |
-        +-+-+-+
-      1 | | | |
-        +-+-+-+
-    */
     for(int i = 0;i < 3;++i)
-        for(int j = 0;j < 3;++j){
+    {
+        for(int j = 0;j < 3;++j)
+        {
             Ordered_Pair p;
             p.col = i-1+col;
             p.row = j-1+row;
             all_moves.push_back(p);
         }
 
-    //removing unwanted moves
-    for(unsigned int i = 0;i < all_moves.size();++i){
-        int c = all_moves[i].col;
-        int r = all_moves[i].row;
-
-        //removing spot where object resides
-        if(c == col && r == row){
-            //cout << "popping out center itself" << endl;
-            all_moves.erase(all_moves.begin() + i);
-            --i;
-        }
-    }
-    for(unsigned int i = 0;i < all_moves.size();++i){
-        int c = all_moves[i].col;
-        int r = all_moves[i].row;
-
-        //removing spot where object resides
-        if(c < 0 || r < 0 || c > NUMCOLS-1 || r > NUMROWS-1)
+        //removing unwanted moves
+        for(unsigned int i = 0;i < all_moves.size();++i)
         {
-           all_moves.erase(all_moves.begin() + i);
-            --i;
-        }
-    }
-    for(unsigned int i = 0;i < all_moves.size();++i){
-        int c = all_moves[i].col;
-        int r = all_moves[i].row;
+            int c = all_moves[i].col;
+            int r = all_moves[i].row;
 
-        //removing spot where object resides
-        if( grid[r][c].a_id != ' '){
-            all_moves.erase(all_moves.begin() + i);
-            --i;
+            //removing spot where object resides
+            if(c == col && r == row)
+            {
+                //cout << "popping out center itself" << endl;
+                all_moves.erase(all_moves.begin() + i);
+                --i;
+            }
+        }
+
+        for(unsigned int i = 0;i < all_moves.size();++i)
+        {
+            int c = all_moves[i].col;
+            int r = all_moves[i].row;
+
+            //removing spot where object resides
+            if(c < 0 || r < 0 || c > NUMCOLS-1 || r > NUMROWS-1)
+            {
+               all_moves.erase(all_moves.begin() + i);
+                --i;
+            }
+        }
+
+        for(unsigned int i = 0;i < all_moves.size();++i)
+        {
+            int c = all_moves[i].col;
+            int r = all_moves[i].row;
+
+            //removing spot where object resides
+            if( grid[r][c].a_id != ' ')
+            {
+                all_moves.erase(all_moves.begin() + i);
+                --i;
+            }
         }
     }
     return all_moves;
@@ -715,9 +770,10 @@ void GUI::create_animals()
     }
 
     // put in the bears
-    //for (;i < curr_size; ++i){
-    //    pool[i] = 'B';
-    //}
+    curr_size += NUMBEAR;
+    for (;i < curr_size; ++i){
+        pool[i] = 'B';
+    }
 
     // put spaces in for the rest
     for (;i < size;++i){
@@ -727,13 +783,14 @@ void GUI::create_animals()
     // shuffle the board
     std::random_shuffle (pool.begin(), pool.end());
 
-    // print the board to see that it's correct
     /*
+    // print the board to see that it's correct
     for (int i = 0; i < size; i++) {
         cout << i << " " << pool[i] << "\t";
         if (i%3 == 0) cout << endl;
     }
     */
+
 
     int counter = 0;
     for(int r = 0; r < NUMROWS;++r)
@@ -741,6 +798,8 @@ void GUI::create_animals()
         for(int c = 0; c < NUMCOLS;++c)
         {
             char type = pool[counter++];
+
+            // put in the herbivores
             if(type == 'R' || type == 'D')
             {
                 Herbivore* h = (Herbivore*)Factory::create_being(type);
@@ -753,6 +812,21 @@ void GUI::create_animals()
 
                 grid[r][c].tile_a.setPostition(v);
                 grid[r][c].tile_a.setImage(h->get_Image());
+            }
+
+            // put in the carnivores
+            if (type == 'W' || type == 'B')
+            {
+                Carnivore* ca = (Carnivore*)Factory::create_being(type);
+                sf::Vector2f v;
+                v.x = (c * TILE_SIZE);
+                v.y = (r * TILE_SIZE) + 100;
+
+                grid[r][c].set_animal(ca);
+                grid[r][c].a_id = type;
+
+                grid[r][c].tile_a.setPostition(v);
+                grid[r][c].tile_a.setImage(ca->get_Image());
             }
         }
     }
