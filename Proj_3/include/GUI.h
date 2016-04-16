@@ -11,12 +11,12 @@
 // macros
 #define NUMROWS     30 //30
 #define NUMCOLS     40 //40
-#define NUMRABBITS  20 //15
-#define NUMDEER     20//5
-#define NUMWOLVES   0 //3
+#define NUMRABBITS  15 //15
+#define NUMDEER     5//5
+#define NUMWOLVES   5 //3
 #define NUMBEAR     0 //2
-#define NUMGRASS    700
-#define NUMFLOWERS  500 //200
+#define NUMGRASS    1000
+#define NUMFLOWERS  200 //200
 
 //reproduction rates
 /*

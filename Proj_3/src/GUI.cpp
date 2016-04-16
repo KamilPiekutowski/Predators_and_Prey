@@ -5,6 +5,7 @@
 #include "Grass.h"
 #include "Flower.h"
 #include "Deer.h"
+#include "Wolf.h"
 
 using namespace std;
 
@@ -623,37 +624,40 @@ void GUI::populate_grid()
 
 void GUI::create_grass_and_flowers()
 {
-    //Ordered_Pair* grass = new Ordered_Pair[NUMGRASS];
+    // create the array
     int size = NUMCOLS*NUMROWS;
     vector<char> pool(size);
     int i = 0;
-    int curr_size = NUMGRASS;
 
-    //populating grass
+    // put in the grass
+    int curr_size = NUMGRASS;
     for (i = 0;i < curr_size;++i){
         pool[i] = 'G';
     }
+
+    // put in the flowers
     curr_size += NUMFLOWERS;
     //populating the rest flower
     for (;i < curr_size;++i){
         pool[i] = 'F';
     }
+
+    // put in spaces for the rest
     for (;i < size;++i){
         pool[i] = ' ';
     }
 
-
-
+    // shuffle the board
     std::random_shuffle ( pool.begin(), pool.end() );
 
-
-
     int counter = 0;
-    for(int r = 0; r < NUMROWS;++r){
-        for(int c = 0; c < NUMCOLS;++c){
+    for(int r = 0; r < NUMROWS;++r)
+    {
+        for(int c = 0; c < NUMCOLS;++c)
+        {
             char type = pool[counter++];
-            if(type != ' '){
-
+            if(type != ' ')
+            {
                 Plant* g = (Plant*)Factory::create_being(type);
                 sf::Vector2f v;
                 v.x = (c * TILE_SIZE);
@@ -666,8 +670,8 @@ void GUI::create_grass_and_flowers()
                 grid[r][c].tile_p.setPostition(v);
                 grid[r][c].tile_p.setImage(g->get_Image());
             }
-
-            else{
+            else
+            {
                 Plant* g = (Plant*)Factory::create_being('P');
                 sf::Vector2f v;
                 v.x = (c * TILE_SIZE);
@@ -679,144 +683,104 @@ void GUI::create_grass_and_flowers()
 
                 grid[r][c].tile_p.setPostition(v);
                 grid[r][c].tile_p.setImage(g->get_Image());
-
             }
-
-
         }
     }
 }
 
 void GUI::create_animals()
 {
-    //Ordered_Pair* grass = new Ordered_Pair[NUMGRASS];
+    // create the array that will hold everything
     int size = NUMCOLS*NUMROWS;
     vector<char> pool(size);
     int i = 0;
 
+    // put in the rabbits
     int curr_size = NUMRABBITS;
     //populating grass
     for (i = 0;i < curr_size;++i){
         pool[i] = 'R';
     }
 
+    // put in the deer
     curr_size += NUMDEER;
-    //populating the rest flower
     for (;i < curr_size;++i){
         pool[i] = 'D';
     }
+
+    // put in the wolves
+    curr_size += NUMWOLVES;
+    for (;i < curr_size;++i){
+        pool[i] = 'W';
+    }
+
+    // put in the bears
+    //for (;i < curr_size; ++i){
+    //    pool[i] = 'B';
+    //}
+
+    // put spaces in for the rest
     for (;i < size;++i){
         pool[i] = ' ';
     }
 
+    // shuffle the board
+    std::random_shuffle (pool.begin(), pool.end());
 
-
-    std::random_shuffle ( pool.begin(), pool.end() );
-
-
+    // print the board to see that it's correct
+    /*
+    for (int i = 0; i < size; i++) {
+        cout << i << " " << pool[i] << "\t";
+        if (i%3 == 0) cout << endl;
+    }
+    */
 
     int counter = 0;
-    for(int r = 0; r < NUMROWS;++r){
-        for(int c = 0; c < NUMCOLS;++c){
-
-                char type = pool[counter++];
-                if(type == 'R' || type == 'D'){
-                    Herbivore* h = (Herbivore*)Factory::create_being(type);
-                    sf::Vector2f v;
-                    v.x = (c * TILE_SIZE);
-                    v.y = (r * TILE_SIZE) + 100;
-
-                    grid[r][c].set_animal(h);
-                    grid[r][c].a_id = type;
-
-                    grid[r][c].tile_a.setPostition(v);
-                    grid[r][c].tile_a.setImage(h->get_Image());
-
-                }
-
-        }
-    }
-}
-
-Ordered_Pair* GUI::create_deer_array(Ordered_Pair* rabbit)
-{
-    Ordered_Pair* deer = new Ordered_Pair[NUMDEER];
-    for (int i = 0; i < NUMDEER; i++)
+    for(int r = 0; r < NUMROWS;++r)
     {
-        int row = rand()%NUMROWS;
-        int col = rand()%NUMCOLS;
-        bool is_unique_pair = true;
-        bool is_not_in_rabbit_array = true;
-        for (int j = 0; j < NUMDEER; j++)
+        for(int c = 0; c < NUMCOLS;++c)
         {
-            if (deer[j].col == col && deer[j].row == row)
+            char type = pool[counter++];
+            if(type == 'R' || type == 'D')
             {
-                is_unique_pair = false;
-                break;
-            }
-        }
-        for (int k = 0; k < NUMRABBITS; k++)
-        {
-            if (rabbit[k].col == col && rabbit[k].row == row)
-            {
-                is_not_in_rabbit_array = false;
-                break;
-            }
-        }
-        if (is_unique_pair && is_not_in_rabbit_array)
-        {
-            deer[i].row = row;
-            deer[i].col = col;
-        }
-        else i--;
-    }
-    return deer;
-}
+                Herbivore* h = (Herbivore*)Factory::create_being(type);
+                sf::Vector2f v;
+                v.x = (c * TILE_SIZE);
+                v.y = (r * TILE_SIZE) + 100;
 
-Ordered_Pair* GUI::create_rabbit_array()
-{
-    Ordered_Pair* rabbit = new Ordered_Pair[NUMRABBITS];
-    for (int i = 0; i < NUMRABBITS; i++)
-    {
-        int row = rand()%NUMROWS;
-        int col = rand()%NUMCOLS;
-        bool is_unique_pair = true;
-        for (int j = 0; j < NUMRABBITS; j++)
-        {
-            if (rabbit[j].col == col && rabbit[j].row == row)
-            {
-                is_unique_pair = false;
-                i--;
-                break;
+                grid[r][c].set_animal(h);
+                grid[r][c].a_id = type;
+
+                grid[r][c].tile_a.setPostition(v);
+                grid[r][c].tile_a.setImage(h->get_Image());
             }
-        }
-        if (is_unique_pair)
-        {
-            rabbit[i].row = row;
-            rabbit[i].col = col;
         }
     }
-    return rabbit;
 }
-
 
 void GUI::print_ASCII(char type)
 {
-    if(type == 'p'){
-        for (int i = 0; i < NUMROWS;++i){
-            for(int j = 0;j < NUMCOLS;++j){
+    if(type == 'p')
+    {
+        for (int i = 0; i < NUMROWS;++i)
+        {
+            for(int j = 0;j < NUMCOLS;++j)
+            {
                 cout << "[" << grid[i][j].p_id << "]";
             }
             cout << endl;
         }
-    }else {
-        for (int i = 0; i < NUMROWS;++i){
-            for(int j = 0;j < NUMCOLS;++j){
+    }
+    else
+    {
+        for (int i = 0; i < NUMROWS;++i)
+        {
+            for(int j = 0;j < NUMCOLS;++j)
+            {
                 cout << "[" << grid[i][j].a_id << "]";
             }
             cout << endl;
         }
     }
-
     cout << endl << endl;
 }

@@ -8,10 +8,7 @@ Herbivore::Herbivore()
     set_is_pregnant(false);
 }
 
-Herbivore::~Herbivore()
-{
-    //dtor
-}
+Herbivore::~Herbivore(){}
 
 // inherited methods
 void Herbivore::age()
@@ -39,14 +36,11 @@ void Herbivore::take_turn(){}
 // getters/setters
 
 void Herbivore::set_move_made(bool b)
-{
-     move_made = b;
-}
+{ move_made = b;}
 
 bool Herbivore::get_move_made()
-{
-     return move_made;
-}
+{ return move_made;}
+
 int Herbivore::get_max_age()
 { return max_age; }
 
@@ -127,6 +121,6 @@ void Herbivore::set_min_calories_to_evade(int mce)
 
 bool Herbivore::get_is_pregnant()
 { return is_pregnant;}
-void Herbivore::set_is_pregnant(bool p){
-    is_pregnant = p;
-};
+
+void Herbivore::set_is_pregnant(bool p)
+{ is_pregnant = p;}

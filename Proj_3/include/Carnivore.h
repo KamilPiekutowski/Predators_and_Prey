@@ -1,9 +1,8 @@
-#ifndef HERBIVORE_H
-#define HERBIVORE_H
+#ifndef CARNIVORE_H
+#define CARNIVORE_H
 #include <Living_Being.h>
 
-
-class Herbivore : public Prey
+class Carnivore : public Predator
 {
 private:
     // miscellaneous variables
@@ -15,10 +14,8 @@ private:
     int max_calories;
     int curr_calories;
     int metabolic_rate;
-    int calories_per_grass;
-    int calories_per_20_grass;
-    int calories_per_flower;
-    int calories_per_30_flowers;
+    int calories_per_rabbit;
+    int calories_per_deer;
 
     // reproduction variables
     int reproductive_rate;
@@ -26,21 +23,18 @@ private:
     int min_calories_to_reproduce;
 
     // evasion variables
-    int min_calories_to_evade;
+    int min_calories_to_hunt;
 
     //bools
     bool move_made;
     bool is_pregnant;
 
- public:
-    Herbivore();
-    ~Herbivore();
+public:
+    Carnivore();
+    virtual ~Carnivore();
 
-    // public variables
-
-
-    // inherited methods
-    void evade();
+    //inherited methods
+    void hunt();
     void die();
     void hunger();
     void move();
@@ -49,8 +43,7 @@ private:
     void take_turn();
     void age();
 
-    // getters/setters
-
+    //getters/setters
     bool get_is_pregnant();
     void set_is_pregnant(bool);
     bool get_move_made();
@@ -65,21 +58,18 @@ private:
     void set_curr_calories(int);
     int get_metabolic_rate();
     void set_metabolic_rate(int);
-    int get_calories_per_grass();
-    void set_calories_per_grass(int);
-    int get_calories_per_20_grass();
-    void set_calories_per_20_grass(int);
-    int get_calories_per_flower();
-    void set_calories_per_flower(int);
-    int get_calories_per_30_flowers();
-    void set_calories_per_30_flowers(int);
+    void set_calories_per_rabbit(int);
+    int get_calories_per_rabbit();
+    void set_calories_per_deer(int);
+    int get_calories_per_deer();
     int get_reproductive_rate();
     void set_reproductive_rate(int);
     int get_min_age_to_reproduce();
     void set_min_age_to_reproduce(int);
     int get_min_calories_to_reproduce();
     void set_min_calories_to_reproduce(int);
-    int get_min_calories_to_evade();
-    void set_min_calories_to_evade(int);
+    void set_min_calories_to_hunt(int);
+    int get_min_calories_to_hunt();
 };
-#endif // HERBIVORE_H
+
+#endif // CARNIVORE_H
