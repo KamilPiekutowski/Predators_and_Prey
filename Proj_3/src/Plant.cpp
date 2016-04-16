@@ -7,6 +7,8 @@ Plant::Plant()
 
     max_calories  = 100;
     curr_calories = 25;
+    image.create(TILE_SIZE,TILE_SIZE, sf::Color::Yellow);
+    this->texture.update(image);
 
 }
 

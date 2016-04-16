@@ -13,7 +13,7 @@ GUI::GUI()
     app = new sf::RenderWindow(sf::VideoMode(800, 700), "SFML window");
     srand (time(NULL));
     populate_grid();
-    //print_ASCII('a');
+    print_ASCII('p');
 }
 
 GUI::~GUI()
@@ -245,17 +245,7 @@ void GUI::herbivore_turn(int row, int col, char type)
                         //sf::Image img = grid[row][col].get_plant()->get_Image();
                         //grid[row][col].tile_p.setImage(img);
                         grid[row][col].tile_a.setColor(sf::Color::Transparent);
-                    //}
-                    //else if(grid[row][col].p_id == 'F')
-                    //{
-                    //    sf::Image img = grid[row][col].get_plant()->get_Image();
-                    //    grid[row][col].tile_p.setImage(img);
-                    //    grid[row][col].tile_a.setColor(sf::Color::Black);
-                    //}
-                    //else
-                    //{
-                    //    grid[row][col].tile_p.setColor(sf::Color::Black);
-                   // }
+
                 }
                 else
                 {
@@ -281,11 +271,6 @@ void GUI::herbivore_turn(int row, int col, char type)
 
                 }
 
-
-                //cout << "dest " << dest.row << "," << dest.col << endl;
-                //cout << "target " << row << "," << col << endl;
-
-
                 //
                 // now that we've moved there, we check for a neighboring predator.  If there
                 // is one, we flee.  If there is not, we eat, possibly reproduce, and end turn.
@@ -298,23 +283,14 @@ void GUI::herbivore_turn(int row, int col, char type)
                if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
                 {
                     if(h->get_curr_calories() < h->get_max_calories()){
-                        //cout << "Rabbit cals:" << r->get_curr_calories() << endl;
                         herbivore_eats(dest, h);
-                        //cout << "Rabbit done" << r->get_curr_calories() << endl;
-
                     }
-
-
                     if (will_reproduce_this_turn)
                     {
-                        //cout << "Herbivore reproduces" << endl;
                         h->set_is_pregnant(true);
                     }
 
                 }
-                //else
-                //{
-                //}
             }
        }
 
@@ -394,11 +370,6 @@ void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
     // get the number of calories that we can eat
     int curr_eat = 5;
 
-    // find out what we're eating
-
-
-
-
      if (grid[dest.row][dest.col].p_id != ' ')
      {
         //if the grass only has <= calories per grass, then we just kill the grass
@@ -410,9 +381,10 @@ void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
             delete[] &p;
             grid[dest.row][dest.col].set_plant(NULL);
             grid[dest.row][dest.col].p_id = ' ';
-            grid[dest.row][dest.col].tile_p.setColor(sf::Color::Transparent);
-            //cout << "eating whats left" << f->get_curr_calories() << endl;
-            //grid[dest.row][dest.col].tile.setColor(sf::Color::Blue);
+            Plant* new_p = (Plant*) new Empty();
+            grid[dest.row][dest.col].set_plant(new_p);
+            grid[dest.row][dest.col].tile_p.setImage(new_p->get_Image());
+
         }
         else {
             int chunk = p->get_curr_calories() / p->get_plant_rate();
@@ -422,14 +394,9 @@ void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
                 chunk = 5;
             }
 
-
-            //cout << "grass" << chunk << endl;
-            //int new_cals = g->get_curr_calories() - chunk;
-            //g->set_curr_calories(new_cals);
             p->remove_calories(chunk);
             h->eat(chunk);
-            //cout << "eating 5" << endl;
-            //cout << "from g " << g->get_curr_calories() << endl;
+
         }
 
     }
@@ -438,11 +405,6 @@ void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
 
 
 }
-
-
-
-
-
 
 
 
@@ -521,7 +483,6 @@ bool GUI::determine_if_herbivore_will_reproduce(Herbivore* h,char type)
             return false;
         }
 
-        //cout << "pregant" << pregnant << endl;
         if (!pregnant)
         {
             return true; // 50% chance of reproduction
@@ -569,12 +530,11 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
 
     //choosing movement randomly
     int r = rand() % neighbors.size();
-    //cout << "Random " << r << endl;
-    //cout << "Pool " << neighbors.size() << endl;
 
     best_neighbor.row = neighbors[r].row;
     best_neighbor.col = neighbors[r].col;
-    //cout << "pos: "<< best_neighbor.col << "," << best_neighbor.row << endl;
+
+
     return best_neighbor;
 }
 
@@ -658,51 +618,7 @@ void GUI::populate_grid()
     // populates the grass
     create_grass_and_flowers();
     create_animals();
-/*
-    Ordered_Pair* rabbit = create_rabbit_array();
-    Ordered_Pair* deer = create_deer_array(rabbit);
 
-    for (int i = 0; i < NUMRABBITS; i++)
-    {
-        if (grid[rabbit[i].row][rabbit[i].col].a_id == ' ')
-        {
-            Rabbit* r = (Rabbit*)Factory::create_being('R');
-            //Living_Being* r = new Rabbit();
-            int col = rabbit[i].col;
-            int row = rabbit[i].row;
-            grid[row][col].a_id = 'R';
-
-            sf::Vector2f v;
-            v.x = (col * TILE_SIZE);
-            v.y = (row * TILE_SIZE) + 100;
-
-            grid[row][col].set_animal(r);
-
-            grid[row][col].tile_a.setPostition(v);
-            grid[row][col].tile_a.setImage(r->get_Image());
-        }
-    }
-
-    for (int i = 0; i < NUMDEER; i++)
-    {
-        if (grid[deer[i].row][deer[i].col].a_id == ' ')
-        {
-            Deer* d = (Deer*)Factory::create_being('D');
-            int col = deer[i].col;
-            int row = deer[i].row;
-            grid[row][col].a_id = 'D';
-
-            sf::Vector2f v;
-            v.x = (col * TILE_SIZE);
-            v.y = (row * TILE_SIZE) + 100;
-
-            grid[row][col].set_animal(d);
-
-            grid[row][col].tile_a.setPostition(v);
-            grid[row][col].tile_a.setImage(d->get_Image());
-        }
-    }
-    */
 }
 
 void GUI::create_grass_and_flowers()
@@ -711,15 +627,21 @@ void GUI::create_grass_and_flowers()
     int size = NUMCOLS*NUMROWS;
     vector<char> pool(size);
     int i = 0;
+    int curr_size = NUMGRASS;
 
     //populating grass
-    for (i = 0;i < NUMGRASS;++i){
+    for (i = 0;i < curr_size;++i){
         pool[i] = 'G';
     }
+    curr_size += NUMFLOWERS;
     //populating the rest flower
-    for (;i < size;++i){
+    for (;i < curr_size;++i){
         pool[i] = 'F';
     }
+    for (;i < size;++i){
+        pool[i] = ' ';
+    }
+
 
 
     std::random_shuffle ( pool.begin(), pool.end() );
@@ -729,8 +651,9 @@ void GUI::create_grass_and_flowers()
     int counter = 0;
     for(int r = 0; r < NUMROWS;++r){
         for(int c = 0; c < NUMCOLS;++c){
+            char type = pool[counter++];
+            if(type != ' '){
 
-                char type = pool[counter++];
                 Plant* g = (Plant*)Factory::create_being(type);
                 sf::Vector2f v;
                 v.x = (c * TILE_SIZE);
@@ -742,8 +665,23 @@ void GUI::create_grass_and_flowers()
 
                 grid[r][c].tile_p.setPostition(v);
                 grid[r][c].tile_p.setImage(g->get_Image());
+            }
 
-            //counter++;
+            else{
+                Plant* g = (Plant*)Factory::create_being('P');
+                sf::Vector2f v;
+                v.x = (c * TILE_SIZE);
+                v.y = (r * TILE_SIZE) + 100;
+
+                grid[r][c].set_plant(g);
+                grid[r][c].p_id = ' ';
+                grid[r][c].a_id = ' ';
+
+                grid[r][c].tile_p.setPostition(v);
+                grid[r][c].tile_p.setImage(g->get_Image());
+
+            }
+
 
         }
     }

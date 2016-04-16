@@ -59,6 +59,7 @@
 		<Unit filename="cb.bmp" />
 		<Unit filename="include/Animals.h" />
 		<Unit filename="include/Deer.h" />
+		<Unit filename="include/Empty.h" />
 		<Unit filename="include/Factory.h" />
 		<Unit filename="include/Flower.h" />
 		<Unit filename="include/GUI.h" />
@@ -73,6 +74,7 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Animals.cpp" />
 		<Unit filename="src/Deer.cpp" />
+		<Unit filename="src/Empty.cpp" />
 		<Unit filename="src/Factory.cpp" />
 		<Unit filename="src/Flower.cpp" />
 		<Unit filename="src/GUI.cpp" />

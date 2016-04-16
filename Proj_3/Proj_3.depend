@@ -454,7 +454,7 @@
 	<SFML/Graphics.hpp>
 	"GUI.h"
 
-1460788446 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\gui.h
+1460792255 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\gui.h
 	<SFML/Graphics.hpp>
 	<iostream>
 	"textButton.h"
@@ -520,10 +520,10 @@
 1460581810 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\textbutton.cpp
 	"textButton.h"
 
-1460779489 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\tile.cpp
+1460789956 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\tile.cpp
 	"TILE.h"
 
-1460788426 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
+1460791970 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
 	"GUI.h"
 	<iostream>
 	<algorithm>
@@ -532,10 +532,11 @@
 	"Flower.h"
 	"Deer.h"
 
-1460766453 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\plant.h
+1460790977 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\plant.h
 	"Living_Being.h"
+	<SFML/Graphics.hpp>
 
-1460786569 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\plant.cpp
+1460790990 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\plant.cpp
 	"Plant.h"
 
 1460753294 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\proj_3\main.cpp
@@ -650,12 +651,13 @@
 1460778982 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\herbivore.h
 	<Living_Being.h>
 
-1460766453 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\factory.h
+1460791545 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\factory.h
 	"Living_Being.h"
 	"Grass.h"
 	"Flower.h"
 	"Rabbit.h"
 	"Deer.h"
+	"Empty.h"
 
 1460778386 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\deer.h
 	"Herbivore.h"
@@ -672,4 +674,12 @@
 	"Herbivore.h"
 	"Square.h"
 	<iostream>
+
+1460791431 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\empty.h
+	"Living_Being.h"
+	"Plant.h"
+	<iostream>
+
+1460792192 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\empty.cpp
+	"Empty.h"
 

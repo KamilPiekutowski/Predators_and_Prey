@@ -11,12 +11,12 @@
 // macros
 #define NUMROWS     30 //30
 #define NUMCOLS     40 //40
-#define NUMRABBITS  2 //15
-#define NUMDEER     2//5
+#define NUMRABBITS  20 //15
+#define NUMDEER     20//5
 #define NUMWOLVES   0 //3
 #define NUMBEAR     0 //2
-#define NUMGRASS    1190
-#define NUMFLOWERS  0 //200
+#define NUMGRASS    700
+#define NUMFLOWERS  500 //200
 
 typedef struct Ordered_Pair_struct
 {

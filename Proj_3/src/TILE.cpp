@@ -2,7 +2,7 @@
 
 TILE::TILE()
 {
-    this->image.create(TILE_SIZE,TILE_SIZE, sf::Color::White);
+    this->image.create(TILE_SIZE,TILE_SIZE, sf::Color::Transparent);
     this->texture.create(TILE_SIZE,TILE_SIZE);
     this->texture.update(this->image);
     this->sprite.setTexture(this->texture);

@@ -1,7 +1,9 @@
 #ifndef PLANT_H
 #define PLANT_H
 #include "Living_Being.h"
+#include <SFML/Graphics.hpp>
 
+#define TILE_SIZE 20
 
 class Plant : public Living_Being
 {
