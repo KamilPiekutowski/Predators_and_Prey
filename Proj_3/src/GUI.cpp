@@ -262,12 +262,10 @@ void GUI::herbivore_turn(int row, int col, char type)
                     grid[row][col].set_animal(h);
 
                     grid[row][col].tile_a.setPostition(v);
-                    if(type == 'D'){
+                    if(type == 'D' || type == 'R'){
                         grid[row][col].tile_a.setImage(h->get_Image());
                     }
-                    else if(type == 'R'){
-                        grid[row][col].tile_a.setImage(h->get_Image());
-                    }
+
 
                 }
 
