@@ -1,5 +1,7 @@
 #include "Deer.h"
 
+
+
 Deer::Deer()
 {
     /*
@@ -32,6 +34,12 @@ Deer::Deer()
     set_min_age_to_reproduce(10);
     set_min_calories_to_reproduce(40);
     set_min_calories_to_evade(30);
+    image.create(TILE_SIZE,TILE_SIZE, sf::Color::Blue);
+    if(!image.loadFromFile("img/deer.png")){
+        cout << "Could not load image" << endl;
+
+    }
+    this->texture.update(image);
 }
 
 Deer::~Deer()

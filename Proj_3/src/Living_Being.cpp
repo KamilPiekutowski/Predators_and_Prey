@@ -33,12 +33,12 @@ void Living_Being::remove_calories(int c)
 {
     curr_calories = curr_calories - c;
 }
-sf::Image* Living_Being::get_Image(){
-    return &image;
+sf::Image Living_Being::get_Image(){
+    return image;
 }
 
-sf::Texture* Living_Being::get_texture(){
-    return &texture;
+sf::Texture Living_Being::get_texture(){
+    return texture;
 }
 
 

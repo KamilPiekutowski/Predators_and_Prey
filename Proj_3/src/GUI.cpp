@@ -199,11 +199,13 @@ void GUI::herbivore_turn(int row, int col, char type)
            grid[row][col].a_id = ' ';
            if (grid[row][col].p_id == 'G')
            {
-               grid[row][col].tile.setColor(sf::Color::Green);
+               sf::Image img = grid[row][col].get_plant()->get_Image();
+               grid[row][col].tile.setImage(img);
            }
            else if (grid[row][col].p_id == 'F')
            {
-               grid[row][col].tile.setColor(sf::Color::Yellow);
+               sf::Image img = grid[row][col].get_plant()->get_Image();
+               grid[row][col].tile.setImage(img);
            }
            else
            {
@@ -228,11 +230,11 @@ void GUI::herbivore_turn(int row, int col, char type)
                 grid[dest.row][dest.col].a_id = type;
                 if (type == 'R')
                 {
-                   grid[dest.row][dest.col].tile.setColor(sf::Color::Magenta);
+                   grid[dest.row][dest.col].tile.setImage(h->get_Image());
                 }
                 else
                 {
-                   grid[dest.row][dest.col].tile.setColor(sf::Color::Blue);
+                   grid[dest.row][dest.col].tile.setImage(h->get_Image());
                 }
 
                 // change old grid square from herbivore to plant
@@ -242,11 +244,13 @@ void GUI::herbivore_turn(int row, int col, char type)
                     grid[row][col].set_animal(NULL);
                     if (grid[row][col].p_id == 'G')
                     {
-                        grid[row][col].tile.setColor(sf::Color::Green);
+                        sf::Image img = grid[row][col].get_plant()->get_Image();
+                        grid[row][col].tile.setImage(img);
                     }
                     else if(grid[row][col].p_id == 'F')
                     {
-                        grid[row][col].tile.setColor(sf::Color::Yellow);
+                        sf::Image img = grid[row][col].get_plant()->get_Image();
+                        grid[row][col].tile.setImage(img);
                     }
                     else
                     {
@@ -258,21 +262,21 @@ void GUI::herbivore_turn(int row, int col, char type)
 
                     h->set_is_pregnant(false);
 
-                    Herbivore* d = (Herbivore*)Factory::create_being(type);
+                    Herbivore* h = (Herbivore*)Factory::create_being(type);
                     grid[row][col].a_id = type;
 
                     sf::Vector2f v;
                     v.x = (col * TILE_SIZE);
                     v.y = (row * TILE_SIZE) + 100;
 
-                    grid[row][col].set_animal(d);
+                    grid[row][col].set_animal(h);
 
                     grid[row][col].tile.setPostition(v);
                     if(type == 'D'){
-                        grid[row][col].tile.setColor(sf::Color::Blue);
+                        grid[row][col].tile.setImage(h->get_Image());
                     }
                     else if(type == 'R'){
-                        grid[row][col].tile.setColor(sf::Color::Magenta);
+                        grid[row][col].tile.setImage(h->get_Image());
                     }
 
                 }
@@ -672,7 +676,7 @@ void GUI::populate_grid()
             grid[row][col].set_animal(r);
 
             grid[row][col].tile.setPostition(v);
-            grid[row][col].tile.setColor(sf::Color::Magenta);
+            grid[row][col].tile.setImage(r->get_Image());
         }
     }
 
@@ -692,7 +696,7 @@ void GUI::populate_grid()
             grid[row][col].set_animal(d);
 
             grid[row][col].tile.setPostition(v);
-            grid[row][col].tile.setColor(sf::Color::Blue);
+            grid[row][col].tile.setImage(d->get_Image());
         }
     }
 }
@@ -725,7 +729,7 @@ void GUI::create_grass_and_flowers()
                 grid[r][c].a_id = ' ';
 
                 grid[r][c].tile.setPostition(v);
-                grid[r][c].tile.setColor(sf::Color::Green);
+                grid[r][c].tile.setImage(g->get_Image());
             }
             else
             {
@@ -741,7 +745,7 @@ void GUI::create_grass_and_flowers()
                 grid[r][c].a_id = ' ';
 
                 grid[r][c].tile.setPostition(v);
-                grid[r][c].tile.setColor(sf::Color::Yellow);
+                grid[r][c].tile.setImage(f->get_Image());
 
             }
             counter++;

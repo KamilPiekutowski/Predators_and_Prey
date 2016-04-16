@@ -26,3 +26,8 @@ void TILE::setColor(sf::Color c)
     this->texture.update(this->image);
     this->sprite.setTexture(this->texture);
 }
+
+void TILE::setImage(sf::Image img){
+    this->texture.update(img);
+    this->sprite.setTexture(this->texture);
+}

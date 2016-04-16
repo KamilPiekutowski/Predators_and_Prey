@@ -13,6 +13,7 @@ class TILE
         //setters
         void setPostition(sf::Vector2f);
         void setColor(sf::Color);
+        void setImage(sf::Image);
     protected:
     private:
         sf::Image image;

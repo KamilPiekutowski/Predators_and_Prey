@@ -467,19 +467,20 @@
 	<SFML/Graphics.hpp>
 	<iostream>
 
-1460581810 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\tile.h
+1460779464 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\tile.h
 	<SFML/Graphics.hpp>
 
 1460775019 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\square.h
 	"TILE.h"
 	"Living_Being.h"
 
-1460775131 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\living_being.h
+1460779427 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\living_being.h
 	<SFML/Graphics.hpp>
 
-1460766453 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\rabbit.h
+1460778417 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\rabbit.h
 	"Herbivore.h"
 	<Living_Being.h>
+	<iostream>
 
 1460581810 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\animals.cpp
 	"Animals.h"
@@ -487,26 +488,28 @@
 1460581810 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\animals.h
 	"Living_Being.h"
 
-1460766453 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\flower.cpp
+1460780005 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\flower.cpp
 	"Flower.h"
 	<iostream>
 
-1460627783 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\flower.h
+1460778384 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\flower.h
 	"Plant.h"
+	<iostream>
 
-1460766453 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\grass.cpp
+1460780061 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\grass.cpp
 	"Grass.h"
 	<iostream>
 
-1460627783 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\grass.h
+1460778429 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\grass.h
 	"Living_Being.h"
 	"Plant.h"
+	<iostream>
 
-1460627783 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\living_being.cpp
+1460779480 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\living_being.cpp
 	"Living_Being.h"
 	<iostream>
 
-1460766453 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\rabbit.cpp
+1460780628 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\rabbit.cpp
 	"Rabbit.h"
 	"Square.h"
 	<iostream>
@@ -517,10 +520,10 @@
 1460581810 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\textbutton.cpp
 	"textButton.h"
 
-1460581810 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\tile.cpp
+1460779489 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\tile.cpp
 	"TILE.h"
 
-1460773784 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
+1460780924 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
 	"GUI.h"
 	<iostream>
 	<algorithm>
@@ -644,7 +647,7 @@
 	"Herbivore.h"
 	<Living_Being.h>
 
-1460770963 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\herbivore.h
+1460778982 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\herbivore.h
 	<Living_Being.h>
 
 1460766453 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\factory.h
@@ -654,11 +657,12 @@
 	"Rabbit.h"
 	"Deer.h"
 
-1460766453 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\deer.h
+1460778386 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\deer.h
 	"Herbivore.h"
 	<Living_Being.h>
+	<iostream>
 
-1460766453 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\deer.cpp
+1460781138 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\deer.cpp
 	"Deer.h"
 
 1460766453 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\factory.cpp

@@ -19,6 +19,12 @@ Rabbit::Rabbit()
     set_min_age_to_reproduce(10);
     set_min_calories_to_reproduce(40);
     set_min_calories_to_evade(30);
+    if(!image.loadFromFile("img/rabbit.png")){
+        cout << "Could not load image" << endl;
+    image.create(TILE_SIZE,TILE_SIZE, sf::Color::Yellow);
+    }
+    this->texture.update(image);
+
 }
 
 Rabbit::~Rabbit()

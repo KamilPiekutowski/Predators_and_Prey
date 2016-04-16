@@ -49,6 +49,7 @@ private:
     void age();
 
     // getters/setters
+
     bool get_is_pregnant();
     void set_is_pregnant(bool);
     bool get_move_made();
