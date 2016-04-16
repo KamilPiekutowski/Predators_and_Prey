@@ -27,7 +27,9 @@ private:
 
     // evasion variables
     int min_calories_to_evade;
+    //bools
     bool move_made;
+    bool is_pregnant;
 
  public:
     Herbivore();
@@ -47,6 +49,8 @@ private:
     void age();
 
     // getters/setters
+    bool get_is_pregnant();
+    void set_is_pregnant(bool);
     bool get_move_made();
     void set_move_made(bool);
     int get_max_age();

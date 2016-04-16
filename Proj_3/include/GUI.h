@@ -11,8 +11,8 @@
 // macros
 #define NUMROWS     30 //30
 #define NUMCOLS     40 //40
-#define NUMRABBITS  10 //15
-#define NUMDEER     10 //5
+#define NUMRABBITS  50 //15
+#define NUMDEER     50 //5
 #define NUMWOLVES   0 //3
 #define NUMBEAR     0 //2
 #define NUMGRASS    600
@@ -48,10 +48,10 @@ class GUI
         void carnivore_turn(int,int,char);
         vector<Ordered_Pair> get_neighbors_that_have_only_plants(int,int);
         Ordered_Pair get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>);
-        bool determine_if_herbivore_will_reproduce(Herbivore*);
+        bool determine_if_herbivore_will_reproduce(Herbivore*,char);
         bool there_is_neighboring_predator(Ordered_Pair,Ordered_Pair,char);
         void herbivore_eats(Ordered_Pair,Herbivore*);
-        void rabbit_reproduces(int,int);
+        //void herbivore_reproduces(int,int);
         void print_ASCII(char);
     protected:
     private:

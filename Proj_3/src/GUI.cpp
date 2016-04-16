@@ -188,7 +188,7 @@ void GUI::herbivore_turn(int row, int col, char type)
        h->set_move_made(true);
 
        h->hunger();
-       //r->age();
+       h->age();
 
        if (h->get_curr_age() >= h->get_max_age() || h->get_curr_calories() == 0)
        {
@@ -219,7 +219,7 @@ void GUI::herbivore_turn(int row, int col, char type)
                 Ordered_Pair dest = get_neighbor_with_highest_caloric_yield(neighbors);
 
                 // next, will we reproduce in this turn
-                bool will_reproduce_this_turn = determine_if_herbivore_will_reproduce(h);
+                bool will_reproduce_this_turn = determine_if_herbivore_will_reproduce(h,type);
                 //if (will_reproduce) cout << "Rabbit may be born" << endl;
 
                 // move to grid space
@@ -236,20 +236,47 @@ void GUI::herbivore_turn(int row, int col, char type)
                 }
 
                 // change old grid square from herbivore to plant
-                grid[row][col].a_id = ' ';
-                grid[row][col].set_animal(NULL);
-                if (grid[row][col].p_id == 'G')
-                {
-                    grid[row][col].tile.setColor(sf::Color::Green);
-                }
-                else if(grid[row][col].p_id == 'F')
-                {
-                    grid[row][col].tile.setColor(sf::Color::Yellow);
+                if(!h->get_is_pregnant()){
+
+                    grid[row][col].a_id = ' ';
+                    grid[row][col].set_animal(NULL);
+                    if (grid[row][col].p_id == 'G')
+                    {
+                        grid[row][col].tile.setColor(sf::Color::Green);
+                    }
+                    else if(grid[row][col].p_id == 'F')
+                    {
+                        grid[row][col].tile.setColor(sf::Color::Yellow);
+                    }
+                    else
+                    {
+                        grid[row][col].tile.setColor(sf::Color::Black);
+                    }
                 }
                 else
                 {
-                    grid[row][col].tile.setColor(sf::Color::Black);
+
+                    h->set_is_pregnant(false);
+
+                    Herbivore* d = (Herbivore*)Factory::create_being(type);
+                    grid[row][col].a_id = type;
+
+                    sf::Vector2f v;
+                    v.x = (col * TILE_SIZE);
+                    v.y = (row * TILE_SIZE) + 100;
+
+                    grid[row][col].set_animal(d);
+
+                    grid[row][col].tile.setPostition(v);
+                    if(type == 'D'){
+                        grid[row][col].tile.setColor(sf::Color::Blue);
+                    }
+                    else if(type == 'R'){
+                        grid[row][col].tile.setColor(sf::Color::Magenta);
+                    }
+
                 }
+
 
                 //cout << "dest " << dest.row << "," << dest.col << endl;
                 //cout << "target " << row << "," << col << endl;
@@ -273,12 +300,13 @@ void GUI::herbivore_turn(int row, int col, char type)
 
                     }
 
-                    /*
+
                     if (will_reproduce_this_turn)
                     {
-                        rabbit_reproduces(row, col);
+                        //cout << "Herbivore reproduces" << endl;
+                        h->set_is_pregnant(true);
                     }
-                    */
+
                 }
                 //else
                 //{
@@ -352,31 +380,7 @@ void GUI::herbivore_turn(int row, int col, char type)
     */
 }
 
-void GUI::rabbit_reproduces(int row, int col)
-{
-    // first we need to know if the baby rabbit will be created on a flower, grass, or empty
-    /*
-    if (grid[row][col].get_grass())
-    {
-        grid[row][col].set_grass(false);
-        grid[row][col].set_grass_rabbit(true);
-        grid[row][col].set_identifier('R');
-    }
-    else if (grid[row][col].get_flower())
-    {
-        grid[row][col].set_flower(false);
-        grid[row][col].set_flower_rabbit(true);
-        grid[row][col].set_identifier('F');
-    }
-    else if(grid[row][col].get_empty())
-    {
-        grid[row][col].set_empty(false);
-        grid[row][col].set_rabbit(true);
-        grid[row][col].set_identifier('r');
-    }
-    grid[row][col].set_animal(Living_Being_Factory::create_being('r'));
-    */
-}
+
 
 
 
@@ -495,12 +499,25 @@ bool GUI::there_is_neighboring_predator(Ordered_Pair dest, Ordered_Pair predator
 }
 
 
-bool GUI::determine_if_herbivore_will_reproduce(Herbivore* h)
+bool GUI::determine_if_herbivore_will_reproduce(Herbivore* h,char type)
 {
     if (h->get_curr_calories() >= h->get_min_age_to_reproduce() &&
         h->get_curr_age() >= h->get_min_age_to_reproduce())
     {
-        if (rand()%100+1 < h->get_reproductive_rate())
+        int pregnant = 0;
+
+        if(type == 'D'){
+            pregnant = (rand()%3);
+        }
+        else if(type == 'R'){
+            pregnant = (rand()%1);
+        }
+        else{
+            return false;
+        }
+
+        //cout << "pregant" << pregnant << endl;
+        if (!pregnant)
         {
             return true; // 50% chance of reproduction
         }
