@@ -25,7 +25,8 @@ public:
     char p_id;
     char a_id;
 
-    TILE tile;
+    TILE tile_p;
+    TILE tile_a;
     /*
     void set_empty(bool e)
     { empty = e; }

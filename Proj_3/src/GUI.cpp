@@ -197,20 +197,8 @@ void GUI::herbivore_turn(int row, int col, char type)
            grid[row][col].set_animal(NULL);
            //cout << "Dead Herbivore" << endl;
            grid[row][col].a_id = ' ';
-           if (grid[row][col].p_id == 'G')
-           {
-               sf::Image img = grid[row][col].get_plant()->get_Image();
-               grid[row][col].tile.setImage(img);
-           }
-           else if (grid[row][col].p_id == 'F')
-           {
-               sf::Image img = grid[row][col].get_plant()->get_Image();
-               grid[row][col].tile.setImage(img);
-           }
-           else
-           {
-                grid[row][col].tile.setColor(sf::Color::Black);
-           }
+           grid[row][col].tile_a.setColor(sf::Color::Transparent);
+
        }
        else
        {
@@ -230,11 +218,21 @@ void GUI::herbivore_turn(int row, int col, char type)
                 grid[dest.row][dest.col].a_id = type;
                 if (type == 'R')
                 {
-                   grid[dest.row][dest.col].tile.setImage(h->get_Image());
+                   sf::Vector2f v;
+                   v.x = (dest.col * TILE_SIZE);
+                   v.y = (dest.row * TILE_SIZE) + 100;
+
+                   grid[dest.row][dest.col].tile_a.setPostition(v);
+                   grid[dest.row][dest.col].tile_a.setImage(h->get_Image());
                 }
                 else
                 {
-                   grid[dest.row][dest.col].tile.setImage(h->get_Image());
+                   sf::Vector2f v;
+                   v.x = (dest.col * TILE_SIZE);
+                   v.y = (dest.row * TILE_SIZE) + 100;
+
+                   grid[dest.row][dest.col].tile_a.setPostition(v);
+                   grid[dest.row][dest.col].tile_a.setImage(h->get_Image());
                 }
 
                 // change old grid square from herbivore to plant
@@ -242,20 +240,22 @@ void GUI::herbivore_turn(int row, int col, char type)
 
                     grid[row][col].a_id = ' ';
                     grid[row][col].set_animal(NULL);
-                    if (grid[row][col].p_id == 'G')
-                    {
-                        sf::Image img = grid[row][col].get_plant()->get_Image();
-                        grid[row][col].tile.setImage(img);
-                    }
-                    else if(grid[row][col].p_id == 'F')
-                    {
-                        sf::Image img = grid[row][col].get_plant()->get_Image();
-                        grid[row][col].tile.setImage(img);
-                    }
-                    else
-                    {
-                        grid[row][col].tile.setColor(sf::Color::Black);
-                    }
+                    //if (grid[row][col].p_id == 'G')
+                    //{
+                        //sf::Image img = grid[row][col].get_plant()->get_Image();
+                        //grid[row][col].tile_p.setImage(img);
+                        grid[row][col].tile_a.setColor(sf::Color::Transparent);
+                    //}
+                    //else if(grid[row][col].p_id == 'F')
+                    //{
+                    //    sf::Image img = grid[row][col].get_plant()->get_Image();
+                    //    grid[row][col].tile_p.setImage(img);
+                    //    grid[row][col].tile_a.setColor(sf::Color::Black);
+                    //}
+                    //else
+                    //{
+                    //    grid[row][col].tile_p.setColor(sf::Color::Black);
+                   // }
                 }
                 else
                 {
@@ -271,12 +271,12 @@ void GUI::herbivore_turn(int row, int col, char type)
 
                     grid[row][col].set_animal(h);
 
-                    grid[row][col].tile.setPostition(v);
+                    grid[row][col].tile_a.setPostition(v);
                     if(type == 'D'){
-                        grid[row][col].tile.setImage(h->get_Image());
+                        grid[row][col].tile_a.setImage(h->get_Image());
                     }
                     else if(type == 'R'){
-                        grid[row][col].tile.setImage(h->get_Image());
+                        grid[row][col].tile_a.setImage(h->get_Image());
                     }
 
                 }
@@ -410,6 +410,7 @@ void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
             delete[] &p;
             grid[dest.row][dest.col].set_plant(NULL);
             grid[dest.row][dest.col].p_id = ' ';
+            grid[dest.row][dest.col].tile_p.setColor(sf::Color::Transparent);
             //cout << "eating whats left" << f->get_curr_calories() << endl;
             //grid[dest.row][dest.col].tile.setColor(sf::Color::Blue);
         }
@@ -644,7 +645,8 @@ void GUI::drawGrid(){
     for(int i = 0;i < 40; ++i){
         for(int j = 0;j < 30; ++j)
         {
-            app->draw(grid[j][i].tile.sprite);
+            app->draw(grid[j][i].tile_p.sprite);
+            app->draw(grid[j][i].tile_a.sprite);
         }
     }
 }
@@ -675,8 +677,8 @@ void GUI::populate_grid()
 
             grid[row][col].set_animal(r);
 
-            grid[row][col].tile.setPostition(v);
-            grid[row][col].tile.setImage(r->get_Image());
+            grid[row][col].tile_a.setPostition(v);
+            grid[row][col].tile_a.setImage(r->get_Image());
         }
     }
 
@@ -695,8 +697,8 @@ void GUI::populate_grid()
 
             grid[row][col].set_animal(d);
 
-            grid[row][col].tile.setPostition(v);
-            grid[row][col].tile.setImage(d->get_Image());
+            grid[row][col].tile_a.setPostition(v);
+            grid[row][col].tile_a.setImage(d->get_Image());
         }
     }
 }
@@ -728,8 +730,8 @@ void GUI::create_grass_and_flowers()
                 grid[r][c].p_id = 'G';
                 grid[r][c].a_id = ' ';
 
-                grid[r][c].tile.setPostition(v);
-                grid[r][c].tile.setImage(g->get_Image());
+                grid[r][c].tile_p.setPostition(v);
+                grid[r][c].tile_p.setImage(g->get_Image());
             }
             else
             {
@@ -744,11 +746,12 @@ void GUI::create_grass_and_flowers()
                 grid[r][c].p_id = 'F';
                 grid[r][c].a_id = ' ';
 
-                grid[r][c].tile.setPostition(v);
-                grid[r][c].tile.setImage(f->get_Image());
+                grid[r][c].tile_p.setPostition(v);
+                grid[r][c].tile_p.setImage(f->get_Image());
 
             }
             counter++;
+
         }
     }
 }

@@ -11,8 +11,8 @@
 // macros
 #define NUMROWS     30 //30
 #define NUMCOLS     40 //40
-#define NUMRABBITS  10 //15
-#define NUMDEER     10 //5
+#define NUMRABBITS  30 //15
+#define NUMDEER     30//5
 #define NUMWOLVES   0 //3
 #define NUMBEAR     0 //2
 #define NUMGRASS    600
