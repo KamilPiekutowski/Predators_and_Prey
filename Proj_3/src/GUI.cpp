@@ -7,6 +7,7 @@
 #include "Deer.h"
 #include "Wolf.h"
 #include "Bear.h"
+#include "Rabbit.h"
 using namespace std;
 
 GUI::GUI()
@@ -176,18 +177,19 @@ void GUI::animal_turn(int row, int col, char type)
 
 void GUI::carnivore_turn(int row, int col, char type)
 {
-
-    // get the rabbit, see if it's turn is finished
-    Carnivore*  h = (Carnivore*)grid[row][col].get_animal();
-    if (!h->get_move_made())
+    // get the carnivore, see if it's turn is finished
+    Carnivore* c = (Carnivore*)grid[row][col].get_animal();
+    char d = grid[row][col].a_id;
+    cout << "The type is " << d << endl;
+    if (!c->get_move_made())
     {
+       c->set_move_made(true);
+       c->hunger();
+       c->age();
 
-       h->set_move_made(true);
 
-       h->hunger();
-       h->age();
-
-       if (h->get_curr_age() >= h->get_max_age()  || h->get_curr_calories() == 0)
+       // see if the carnivore dies of old age or starvation
+       if (c->get_curr_age() >= c->get_max_age()  || c->get_curr_calories() == 0)
        {
 
            //h->die();
@@ -198,90 +200,91 @@ void GUI::carnivore_turn(int row, int col, char type)
            grid[row][col].tile_a.setColor(sf::Color::Transparent);
 
        }
-       else
+       else // we continue the turn, as the carnivore will live
        {
 
+          // get the neigboring prey squares
           vector<Ordered_Pair> neighbors = get_neighbors_that_have_only_prey(row, col);
+
           if (!neighbors.empty()) // else the turn ends
           {
-
+            cout << "And the neighbors are:" << endl;
+              for (int i = 0; i < neighbors.size(); i++)
+              {
+                  cout << i+1 << "\t(" << neighbors[i].row << "," << neighbors[i].col << ")" << endl;
+              }
+              // choose the first prey
               Ordered_Pair dest = get_random_move(neighbors);
 
-                // next, will we reproduce in this turn
-             determine_if_carnivore_will_reproduce(h,type);
-                    //if (will_reproduce) cout << "Rabbit may be born" << endl;
-                    //h->set_is_pregnant(false);
-                    // move to grid space
-              grid[dest.row][dest.col].set_animal(h);
+              // now the carnivore can eat the prey
+              carnivore_eats(dest, c, row, col);
+
+              // next, will we reproduce in this turn
+              determine_if_carnivore_will_reproduce(c,type);
+
+              // move the carnivore to the new space
+              grid[dest.row][dest.col].set_animal(c);
               grid[dest.row][dest.col].a_id = type;
+              sf::Vector2f v;
+              v.x = (dest.col * TILE_SIZE);
+              v.y = (dest.row * TILE_SIZE) + 100;
+              grid[dest.row][dest.col].tile_a.setPostition(v);
+              grid[dest.row][dest.col].tile_a.setImage(c->get_Image());
 
-                   sf::Vector2f v;
-                   v.x = (dest.col * TILE_SIZE);
-                   v.y = (dest.row * TILE_SIZE) + 100;
+              // if the carnivore will not reproduce, we change the
+              // square back to what it was
+              if(!c->get_is_pregnant())
+              {
+                  // set the ids
+                  grid[row][col].a_id = ' ';
+                  grid[row][col].set_animal(NULL);
 
-                   grid[dest.row][dest.col].tile_a.setPostition(v);
+                  // if the old square is grass
+                  if (grid[row][col].p_id == 'G')
+                  {
+                      sf::Image img = grid[row][col].get_plant()->get_Image();
+                      grid[row][col].tile_p.setImage(img);
+                      grid[row][col].tile_a.setColor(sf::Color::Transparent);
+                  }
 
-                   grid[dest.row][dest.col].tile_a.setImage(h->get_Image());
-
-
-
-
-                // change old grid square from Carnivore to plant
-                if(!h->get_is_pregnant()){
-
-                    grid[row][col].a_id = ' ';
-                    grid[row][col].set_animal(NULL);
-                    if (grid[row][col].p_id == 'G')
-                    {
-                        sf::Image img = grid[row][col].get_plant()->get_Image();
-                        grid[row][col].tile_p.setImage(img);
-                        grid[row][col].tile_a.setColor(sf::Color::Transparent);
-
-                    }
-                    if (grid[row][col].p_id == 'F')
-                    {
-                        sf::Image img = grid[row][col].get_plant()->get_Image();
-                        grid[row][col].tile_p.setImage(img);
-                        grid[row][col].tile_a.setColor(sf::Color::Transparent);
-
-                    }
-                }
-                else
+                  // else it's gonna be flower
+                  if (grid[row][col].p_id == 'F')
+                  {
+                      sf::Image img = grid[row][col].get_plant()->get_Image();
+                      grid[row][col].tile_p.setImage(img);
+                      grid[row][col].tile_a.setColor(sf::Color::Transparent);
+                  }
+               }
+               else // we create a new carnivore and put it in the old square
                {
-                    cout << "Carnivore pregnant" << endl;
-                    h->set_is_pregnant(false);
+                    //cout << "Carnivore pregnant" << endl;
+                    c->set_is_pregnant(false);
 
+                    // create new carnivore, put it in old square
                     Carnivore* h = (Carnivore*)Factory::create_being(type);
                     grid[row][col].a_id = type;
-
                     sf::Vector2f v;
                     v.x = (col * TILE_SIZE);
                     v.y = (row * TILE_SIZE) + 100;
-
-                    grid[row][col].set_animal(h);
-
+                    grid[row][col].set_animal(c);
                     grid[row][col].tile_a.setPostition(v);
-                    if(type == 'W'){
+                    if(type == 'W')
+                    {
                         grid[row][col].tile_a.setImage(h->get_Image());
                     }
-                    else if(type == 'B'){
-                        cout << "creating new bear" << endl;
+                    else if(type == 'B')
+                    {
+                        //cout << "creating new bear" << endl;
                         grid[row][col].tile_a.setImage(h->get_Image());
                     }
-
-               }
-
-
-
-          }
-
-       }
-
-
-    }
-
-
-}
+                 }
+             } // there are no neighbors
+             //
+             // put HUNTING CODE HERE
+             //
+         }
+     }
+ }
 
 
 void GUI::herbivore_turn(int row, int col, char type)
@@ -310,7 +313,6 @@ void GUI::herbivore_turn(int row, int col, char type)
            vector<Ordered_Pair> neighbors = get_neighbors_that_have_only_plants(row, col);
             if (!neighbors.empty()) // else the turn ends
             {
-
                 Ordered_Pair dest = get_neighbor_with_highest_caloric_yield(neighbors);
 
                 // next, will we reproduce in this turn
@@ -402,6 +404,70 @@ void GUI::herbivore_turn(int row, int col, char type)
 }
 
 
+void GUI::carnivore_eats(Ordered_Pair dest, Carnivore* h, int row, int col)
+{
+    if (grid[dest.row][dest.col].a_id == 'R')
+    {
+        Rabbit* r = (Rabbit*)grid[dest.row][dest.col].get_animal();
+        if (grid[row][col].a_id == 'W')
+        {
+            Wolf *w = (Wolf*)grid[row][col].get_animal();
+            if (r->get_curr_calories() < w->get_calories_per_rabbit())
+            {
+                w->eat(r->get_curr_calories());
+            }
+            else
+            {
+                w->eat(w->get_calories_per_rabbit());
+            }
+       //     delete[]&r;
+        }
+        else // it's a bear
+        {
+            Bear *b = (Bear*)grid[row][col].get_animal();
+            if (r->get_curr_calories() < b->get_calories_per_rabbit())
+            {
+                b->eat(r->get_curr_calories());
+            }
+            else
+            {
+                b->eat(b->get_calories_per_rabbit());
+            }
+        //    delete[]&r;
+        }
+    }
+    else // it's a deer
+    {
+        Deer* d = (Deer*)grid[dest.row][dest.col].get_animal();
+        if (grid[row][col].a_id == 'W')
+        {
+            Wolf *w = (Wolf*)grid[row][col].get_animal();
+            if (d->get_curr_calories() < w->get_calories_per_deer())
+            {
+                w->eat(d->get_curr_calories());
+            }
+            else
+            {
+                w->eat(w->get_calories_per_deer());
+            }
+           // delete[]&d;
+        }
+        else // it's a bear
+        {
+            Bear *b = (Bear*)grid[row][col].get_animal();
+            if (d->get_curr_calories() < b->get_calories_per_rabbit())
+            {
+                b->eat(d->get_curr_calories());
+            }
+            else
+            {
+                b->eat(b->get_calories_per_deer());
+            }
+            //delete[]&d;
+        }
+    }
+}
+
 void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
 {
     // get the number of calories that we can eat
@@ -433,14 +499,8 @@ void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
 
             p->remove_calories(chunk);
             h->eat(chunk);
-
         }
-
     }
-
-
-
-
 }
 
 
@@ -583,73 +643,128 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
 
 vector<Ordered_Pair> GUI::get_neighbors_that_have_only_prey(int row,int col)
 {
-
-
-    vector<Ordered_Pair> all_moves;
-    for(int i = 0;i < 3;++i)
+    vector <Ordered_Pair> neighbors;
+    // look up to the left
+    if (row - 1 >= 0 && col - 1 >= 0)
     {
-        for(int j = 0;j < 3;++j)
+        if (grid[row-1][col-1].a_id != ' ')
         {
-            Ordered_Pair p;
-            p.col = i-1+col;
-            p.row = j-1+row;
-            all_moves.push_back(p);
-        }
-    }
-    //removing itself from the move pool
-    for(unsigned int i = 0;i < all_moves.size();++i)
-    {
-        int c = all_moves[i].col;
-        int r = all_moves[i].row;
-
-        //removing spot where object resides
-        if(c == col && r == row)
-        {
-            //cout << "popping out center itself" << endl;
-            all_moves.erase(all_moves.begin() + i);
-            --i;
-        }
-    }
-    //removing out of boundaries
-    for(unsigned int i = 0;i < all_moves.size();++i)
-    {
-        int c = all_moves[i].col;
-        int r = all_moves[i].row;
-
-        //removing spot where object resides
-        if(c < 0 || r < 0 || c > NUMCOLS-1 || r > NUMROWS-1)
-        {
-           all_moves.erase(all_moves.begin() + i);
-            --i;
+            if (grid[row-1][col-1].a_id == 'R' || grid[row-1][col-1].a_id == 'D')
+            {
+                Ordered_Pair n;
+                n.row = row-1;
+                n.col = col-1;
+                neighbors.push_back(n);
+            }
         }
     }
 
-    //removing occupied spaces
-    //cout << "get moves" << endl;
-    for(unsigned int i = 0;i < all_moves.size();++i)
+    // look up
+    if (row - 1 >= 0)
     {
-        int c = all_moves[i].col;
-        int r = all_moves[i].row;
-
-        //removing spot where object resides
-         if( grid[r][c].a_id != ' ')
+        if (grid[row-1][col].a_id != ' ')
         {
-            all_moves.erase(all_moves.begin() + i);
-            --i;
+            if (grid[row-1][col].a_id == 'R' || grid[row-1][col].a_id == 'D')
+            {
+                Ordered_Pair n;
+                n.row = row-1;
+                n.col = col;
+                neighbors.push_back(n);
+            }
         }
     }
-    //cout << "get moves end" << endl;
 
-   for (int i = 0; i < all_moves.size();++i){
-        int c = all_moves[i].col;
-        int r = all_moves[i].row;
-
-        //cout << "Nearby" << i << ". " << grid[r][c].a_id << endl;
-
+    // look up to the right
+    if (row-1 >= 0 && col+1 < NUMCOLS)
+    {
+        if (grid[row-1][col+1].a_id != ' ')
+        {
+            if (grid[row-1][col+1].a_id == 'R' || grid[row-1][col+1].a_id == 'D')
+            {
+                Ordered_Pair n;
+                n.row = row-1;
+                n.col = col+1;
+                neighbors.push_back(n);
+            }
+        }
     }
-    //cout << "********" << endl;
 
-    return all_moves;
+    // look left
+    if (col - 1 >= 0)
+    {
+        if (grid[row][col-1].a_id != ' ')
+        {
+            if (grid[row][col-1].a_id == 'R' || grid[row][col-1].a_id == 'D')
+            {
+                Ordered_Pair n;
+                n.row = row;
+                n.col = col-1;
+                neighbors.push_back(n);
+            }
+        }
+    }
+
+    // look right
+    if (col+1 < NUMCOLS)
+    {
+        if (grid[row][col+1].a_id != ' ')
+        {
+            if (grid[row][col+1].a_id == 'R' || grid[row][col+1].a_id == 'D')
+            {
+                Ordered_Pair n;
+                n.row = row;
+                n.col = col+1;
+                neighbors.push_back(n);
+            }
+        }
+    }
+
+    // look down and to the left
+    if (row+1 < NUMROWS && col-1 >= 0)
+    {
+        if (grid[row+1][col-1].a_id != ' ')
+        {
+            if (grid[row+1][col-1].a_id == 'R' || grid[row+1][col-1].a_id == 'D')
+            {
+                Ordered_Pair n;
+                n.row = row+1;
+                n.col = col-1;
+                neighbors.push_back(n);
+            }
+        }
+    }
+
+    // look down
+    if (row+1 < NUMROWS)
+    {
+        if (grid[row+1][col].a_id != ' ')
+        {
+            if (grid[row+1][col].a_id == 'R' || grid[row+1][col].a_id == 'D')
+            {
+                Ordered_Pair n;
+                n.row = row+1;
+                n.col = col;
+                neighbors.push_back(n);
+            }
+        }
+    }
+
+    // look down and to the right
+    if (row+1 < NUMROWS && row+1 < NUMCOLS)
+    {
+        if (grid[row+1][col+1].a_id != ' ')
+        {
+            if (grid[row+1][col+1].a_id == 'R' || grid[row+1][col+1].a_id == 'D')
+            {
+                Ordered_Pair n;
+                n.row = row+1;
+                n.col = col+1;
+                neighbors.push_back(n);
+            }
+        }
+    }
+
+    return neighbors;
 }
 
 vector<Ordered_Pair> GUI::get_neighbors_that_have_only_plants(int row, int col)
@@ -917,13 +1032,9 @@ void GUI::print_ASCII(char type)
 
 Ordered_Pair GUI::get_random_move(vector<Ordered_Pair> neighbors)
 {
-    Ordered_Pair move;
-
+    Ordered_Pair dest;
     int r = rand() % neighbors.size();
-
-    move.row = neighbors[r].row;
-    move.col = neighbors[r].col;
-
-
-    return move;
+    dest.row = neighbors[r].row;
+    dest.col = neighbors[r].col;
+    return dest;
 }

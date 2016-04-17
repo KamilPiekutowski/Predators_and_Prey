@@ -67,6 +67,7 @@ class GUI
         void determine_if_carnivore_will_reproduce(Carnivore*,char);
         bool there_is_neighboring_predator(Ordered_Pair,Ordered_Pair,char);
         void herbivore_eats(Ordered_Pair,Herbivore*);
+        void carnivore_eats(Ordered_Pair,Carnivore*,int,int);
         //void herbivore_reproduces(int,int);
         void print_ASCII(char);
     protected:
