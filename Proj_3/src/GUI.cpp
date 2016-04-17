@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <time.h>
+#include <ctime>
 #include "Grass.h"
 #include "Flower.h"
 #include "Deer.h"
@@ -9,6 +10,14 @@
 #include "Bear.h"
 #include "Rabbit.h"
 using namespace std;
+
+const int mSecs = 500;
+
+void GUI::pause(unsigned secs = 1U)
+{
+   clock_t wait = secs+mSecs+clock();
+   while(wait > clock()) continue;
+}
 
 GUI::GUI()
 {
@@ -91,6 +100,7 @@ void GUI::Run()
             //cout << "STEP" << endl;
             //print_ASCII('a');
             step();
+            pause();
 
         }
 
@@ -745,6 +755,7 @@ void GUI::determine_if_herbivore_will_reproduce(Herbivore* h,char type)
 
 Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>neighbors)
 {
+    /*
     Ordered_Pair best_neighbor;
     best_neighbor.row = -999;
     best_neighbor.col = 0;
@@ -778,10 +789,11 @@ Ordered_Pair GUI::get_neighbor_with_highest_caloric_yield(vector<Ordered_Pair>ne
         }
 
     }
+    */
 
     //choosing movement randomly
     int r = rand() % neighbors.size();
-
+    Ordered_Pair best_neighbor;
     best_neighbor.row = neighbors[r].row;
     best_neighbor.col = neighbors[r].col;
 

@@ -70,6 +70,7 @@ class GUI
         void carnivore_eats(Ordered_Pair,Carnivore*,int,int);
         Ordered_Pair get_square_without_fellow_predators(int,int);
         //void herbivore_reproduces(int,int);
+        void pause(unsigned);
         void print_ASCII(char);
     protected:
     private:
