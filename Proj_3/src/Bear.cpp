@@ -6,7 +6,7 @@ using namespace std;
 Bear::Bear()
 {
     set_move_made(false);
-    set_max_age(1000000000000);
+    set_max_age(10000000);
     set_curr_age(0);
     set_max_calories(250);
     set_curr_calories(100);
