@@ -278,7 +278,43 @@ void GUI::carnivore_turn(int row, int col, char type)
                         grid[row][col].tile_a.setImage(h->get_Image());
                     }
                  }
-             } // there are no neighbors
+             }
+             else // there are no neighbors
+             {
+                 // get the surrounding squares that have to predators (we already know
+                 // that they have to prey), and randomly choose on to wander to
+                 Ordered_Pair dest = get_square_without_fellow_predators(row, col);
+
+                 // move the carnivore to the new space
+                 grid[dest.row][dest.col].set_animal(c);
+                 grid[dest.row][dest.col].a_id = type;
+                 sf::Vector2f v;
+                 v.x = (dest.col * TILE_SIZE);
+                 v.y = (dest.row * TILE_SIZE) + 100;
+                 grid[dest.row][dest.col].tile_a.setPostition(v);
+                 grid[dest.row][dest.col].tile_a.setImage(c->get_Image());
+
+                 // and remove the carnivore from the old space
+                 grid[row][col].a_id = ' ';
+                 grid[row][col].set_animal(NULL);
+
+                 // if the old square is grass
+                 if (grid[row][col].p_id == 'G')
+                 {
+                     sf::Image img = grid[row][col].get_plant()->get_Image();
+                     grid[row][col].tile_p.setImage(img);
+                     grid[row][col].tile_a.setColor(sf::Color::Transparent);
+                 }
+
+                 // else it's gonna be flower
+                 if (grid[row][col].p_id == 'F')
+                 {
+                     sf::Image img = grid[row][col].get_plant()->get_Image();
+                     grid[row][col].tile_p.setImage(img);
+                     grid[row][col].tile_a.setColor(sf::Color::Transparent);
+                 }
+
+             }
              //
              // put HUNTING CODE HERE
              //
@@ -355,7 +391,6 @@ void GUI::herbivore_turn(int row, int col, char type)
                 }
                 else
                 {
-
                     h->set_is_pregnant(false);
 
                     Herbivore* h = (Herbivore*)Factory::create_being(type);
@@ -403,6 +438,119 @@ void GUI::herbivore_turn(int row, int col, char type)
     }
 }
 
+Ordered_Pair GUI::get_square_without_fellow_predators(int row, int col)
+{
+    vector <Ordered_Pair> neighbors;
+    // look up to the left
+    if (row - 1 >= 0 && col - 1 >= 0)
+    {
+        if (grid[row-1][col-1].a_id == ' ')
+        {
+            Ordered_Pair n;
+            n.row = row-1;
+            n.col = col-1;
+            neighbors.push_back(n);
+        }
+    }
+
+    // look up
+    if (row - 1 >= 0)
+    {
+        if (grid[row-1][col].a_id == ' ')
+        {
+            Ordered_Pair n;
+            n.row = row-1;
+            n.col = col;
+            neighbors.push_back(n);
+        }
+    }
+
+    // look up to the right
+    if (row-1 >= 0 && col+1 < NUMCOLS)
+    {
+        if (grid[row-1][col+1].a_id == ' ')
+        {
+            Ordered_Pair n;
+            n.row = row-1;
+            n.col = col+1;
+            neighbors.push_back(n);
+        }
+    }
+
+    // look left
+    if (col - 1 >= 0)
+    {
+        if (grid[row][col-1].a_id == ' ')
+        {
+            Ordered_Pair n;
+            n.row = row;
+            n.col = col-1;
+            neighbors.push_back(n);
+        }
+    }
+
+    // look right
+    if (col+1 < NUMCOLS)
+    {
+        if (grid[row][col+1].a_id == ' ')
+        {
+            Ordered_Pair n;
+            n.row = row;
+            n.col = col+1;
+            neighbors.push_back(n);
+        }
+    }
+
+    // look down and to the left
+    if (row+1 < NUMROWS && col-1 >= 0)
+    {
+        if (grid[row+1][col-1].a_id == ' ')
+        {
+            Ordered_Pair n;
+            n.row = row+1;
+            n.col = col-1;
+            neighbors.push_back(n);
+        }
+    }
+
+    // look down
+    if (row+1 < NUMROWS)
+    {
+        if (grid[row+1][col].a_id == ' ')
+        {
+            Ordered_Pair n;
+            n.row = row+1;
+            n.col = col;
+            neighbors.push_back(n);
+        }
+    }
+
+    // look down and to the right
+    if (row+1 < NUMROWS && row+1 < NUMCOLS)
+    {
+        if (grid[row+1][col+1].a_id == ' ')
+        {
+            Ordered_Pair n;
+            n.row = row+1;
+            n.col = col+1;
+            neighbors.push_back(n);
+        }
+    }
+
+    Ordered_Pair dest;
+    if (neighbors.empty())
+    {
+        dest.row = row;
+        dest.col = col;
+    }
+    else
+    {
+        int ran_num = rand()%neighbors.size();
+        dest.row = neighbors[ran_num].row;
+        dest.col = neighbors[ran_num].col;
+    }
+    return dest;
+}
 
 void GUI::carnivore_eats(Ordered_Pair dest, Carnivore* h, int row, int col)
 {

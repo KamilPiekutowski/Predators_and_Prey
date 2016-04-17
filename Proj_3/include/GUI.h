@@ -68,6 +68,7 @@ class GUI
         bool there_is_neighboring_predator(Ordered_Pair,Ordered_Pair,char);
         void herbivore_eats(Ordered_Pair,Herbivore*);
         void carnivore_eats(Ordered_Pair,Carnivore*,int,int);
+        Ordered_Pair get_square_without_fellow_predators(int,int);
         //void herbivore_reproduces(int,int);
         void print_ASCII(char);
     protected:

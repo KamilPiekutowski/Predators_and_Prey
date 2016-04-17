@@ -694,7 +694,7 @@
 	<SFML/Graphics.hpp>
 	"GUI.h"
 
-1460923125 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\gui.h
+1460927811 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\gui.h
 	<SFML/Graphics.hpp>
 	<iostream>
 	"textButton.h"
@@ -783,7 +783,7 @@
 	"Grass.h"
 	<iostream>
 
-1460924859 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\gui.cpp
+1460928680 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\src\gui.cpp
 	"GUI.h"
 	<iostream>
 	<algorithm>
