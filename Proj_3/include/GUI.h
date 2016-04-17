@@ -16,7 +16,7 @@
 #define NUMRABBITS  30//15
 #define NUMDEER     30//5
 #define NUMWOLVES   15 //3
-#define NUMBEAR     15 //2
+#define NUMBEAR     10 //2
 #define NUMGRASS    1000
 #define NUMFLOWERS  200 //200
 

@@ -21,7 +21,7 @@ Deer::Deer()
     set_min_calories_to_evade(35);
     */
     set_move_made(false);
-    set_max_age(25);
+    set_max_age(40);
     set_curr_age(0);
     set_max_calories(45);
     set_curr_calories(10);

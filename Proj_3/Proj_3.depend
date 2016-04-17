@@ -454,7 +454,7 @@
 	<SFML/Graphics.hpp>
 	"GUI.h"
 
-1460866681 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\gui.h
+1460868710 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\gui.h
 	<SFML/Graphics.hpp>
 	<iostream>
 	"textButton.h"
@@ -511,7 +511,7 @@
 	"Living_Being.h"
 	<iostream>
 
-1460858416 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\rabbit.cpp
+1460867443 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\rabbit.cpp
 	"Rabbit.h"
 	"Square.h"
 	<iostream>
@@ -526,7 +526,7 @@
 1460795267 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\tile.cpp
 	"TILE.h"
 
-1460866641 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
+1460868623 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
 	"GUI.h"
 	<iostream>
 	<algorithm>
@@ -671,7 +671,7 @@
 	<Living_Being.h>
 	<iostream>
 
-1460855045 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\deer.cpp
+1460867443 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\deer.cpp
 	"Deer.h"
 
 1460766453 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\factory.cpp
@@ -853,7 +853,7 @@
 1460855045 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\bear.h
 	"Carnivore.h"
 
-1460866581 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\bear.cpp
+1460868692 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\bear.cpp
 	"Bear.h"
 	"TILE.h"
 	<iostream>
@@ -862,7 +862,7 @@
 	"Carnivore.h"
 	<iostream>
 
-1460855045 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\wolf.cpp
+1460868643 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\wolf.cpp
 	"Wolf.h"
 	"TILE.h"
 	<iostream>

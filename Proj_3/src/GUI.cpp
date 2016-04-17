@@ -185,15 +185,15 @@ void GUI::carnivore_turn(int row, int col, char type)
        h->set_move_made(true);
 
        h->hunger();
-       //h->age();
+       h->age();
 
-       if (h->get_curr_age() >= h->get_max_age()  /*h->get_curr_calories() == 0*/)
+       if (h->get_curr_age() >= h->get_max_age()  || h->get_curr_calories() == 0)
        {
 
            //h->die();
            //delete[] &h;
            //grid[row][col].set_animal(NULL);
-           cout << "Dead Carnivore of age " << endl << h->get_curr_age() ;
+           //cout << "Dead Carnivore of age " << endl << h->get_curr_age() ;
            grid[row][col].a_id = ' ';
            grid[row][col].tile_a.setColor(sf::Color::Transparent);
 
@@ -208,9 +208,9 @@ void GUI::carnivore_turn(int row, int col, char type)
               Ordered_Pair dest = get_random_move(neighbors);
 
                 // next, will we reproduce in this turn
-                   // determine_if_herbivore_will_reproduce(h,type);
+             determine_if_carnivore_will_reproduce(h,type);
                     //if (will_reproduce) cout << "Rabbit may be born" << endl;
-                    h->set_is_pregnant(false);
+                    //h->set_is_pregnant(false);
                     // move to grid space
               grid[dest.row][dest.col].set_animal(h);
               grid[dest.row][dest.col].a_id = type;
@@ -248,7 +248,7 @@ void GUI::carnivore_turn(int row, int col, char type)
                 }
                 else
                {
-/*
+                    cout << "Carnivore pregnant" << endl;
                     h->set_is_pregnant(false);
 
                     Carnivore* h = (Carnivore*)Factory::create_being(type);
@@ -265,38 +265,15 @@ void GUI::carnivore_turn(int row, int col, char type)
                         grid[row][col].tile_a.setImage(h->get_Image());
                     }
                     else if(type == 'B'){
+                        cout << "creating new bear" << endl;
                         grid[row][col].tile_a.setImage(h->get_Image());
-                    }
-*/
-                }
-
-
-                //
-                // now that we've moved there, we check for a neighboring predator.  If there
-                // is one, we flee.  If there is not, we eat, possibly reproduce, and end turn.
-                //
-
-
-
-          //      Ordered_Pair neighboring_predator;
-          //      neighboring_predator.col = -999;
-          //      neighboring_predator.row = -999;
-          //      char direction = ' ';
-/*
-               if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
-               {
-                    if(h->get_curr_calories() < h->get_max_calories()){
-                        //Carnivore_eats(dest, h);
-                    }
-
-                    if (h->get_is_pregnant())
-                    {
-                        h->set_is_pregnant(false);
                     }
 
                }
-*/
-                }
+
+
+
+          }
 
        }
 
@@ -532,10 +509,11 @@ void GUI::determine_if_carnivore_will_reproduce(Carnivore* c,char type)
     if (c->get_curr_calories() >= c->get_min_calories_to_reproduce() &&
     c->get_curr_age() >= c->get_min_age_to_reproduce())
     {
+
         int num =  rand()%100+1;
         if (num < c->get_reproductive_rate())
         {
-            c->set_is_pregnant(false);
+            c->set_is_pregnant(true);
         }
     }
 }
