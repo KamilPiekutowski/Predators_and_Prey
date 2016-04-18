@@ -13,10 +13,10 @@
 // macros
 #define NUMROWS     30 //30
 #define NUMCOLS     40 //40
-#define NUMRABBITS  30//15
-#define NUMDEER     30//5
-#define NUMWOLVES   15 //3
-#define NUMBEAR     10 //2
+#define NUMRABBITS  15//15
+#define NUMDEER     5//5
+#define NUMWOLVES   3 //3
+#define NUMBEAR     2 //2
 #define NUMGRASS    1000
 #define NUMFLOWERS  200 //200
 
@@ -69,6 +69,7 @@ class GUI
         void herbivore_eats(Ordered_Pair,Herbivore*);
         void carnivore_eats(Ordered_Pair,Carnivore*,int,int);
         Ordered_Pair get_square_without_fellow_predators(int,int);
+        char display_stats_check_for_end_of_program();
         //void herbivore_reproduces(int,int);
         void pause(unsigned);
         void print_ASCII(char);

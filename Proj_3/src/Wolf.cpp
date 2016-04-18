@@ -13,10 +13,12 @@ Wolf::Wolf()
     set_curr_calories(150);
     set_min_calories_to_eat(190);
     set_metabolic_rate(2);
-    set_reproductive_rate(45);
-    set_min_age_to_reproduce(0);
-    set_min_calories_to_reproduce(0);
+    set_reproductive_rate(40);
+    set_min_age_to_reproduce(10);
+    set_min_calories_to_reproduce(120);
     set_min_calories_to_hunt(40);
+    set_calories_per_deer(13);
+    set_calories_per_rabbit(10);
     if(!image.loadFromFile("img/wolf.png"))
     {
         cout << "Could not load image" << endl;

@@ -12,10 +12,12 @@ Bear::Bear()
     set_curr_calories(100);
     set_min_calories_to_eat(170);
     set_metabolic_rate(3);
-    set_reproductive_rate(35);
-    set_min_age_to_reproduce(0);
-    set_min_calories_to_reproduce(0);
+    set_reproductive_rate(50);
+    set_min_age_to_reproduce(18);
+    set_min_calories_to_reproduce(175);
     set_min_calories_to_hunt(30);
+    set_calories_per_deer(15);
+    set_calories_per_rabbit(13);
     if(!image.loadFromFile("img/bear.png"))
     {
         cout << "Could not load image" << endl;
