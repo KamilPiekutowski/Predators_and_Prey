@@ -13,7 +13,7 @@ Wolf::Wolf()
     set_curr_calories(150);
     set_min_calories_to_eat(190);
     set_metabolic_rate(2);
-    set_reproductive_rate(40);
+    set_reproductive_rate(20);
     set_min_age_to_reproduce(10);
     set_min_calories_to_reproduce(120);
     set_min_calories_to_hunt(40);

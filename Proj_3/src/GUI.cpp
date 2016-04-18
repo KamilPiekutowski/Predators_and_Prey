@@ -332,117 +332,135 @@ void GUI::carnivore_turn(int row, int col, char type)
                       grid[row][col].tile_a.setImage(c->get_Image());
                   }
                 }
-              /*
-              if(!c->get_is_pregnant())
-              {
-                  // set the ids
-                  grid[row][col].a_id = ' ';
-                  grid[row][col].set_animal(NULL);
-
-                  // if the old square is grass
-                  if (grid[row][col].p_id == 'G')
-                  {
-                      sf::Image img = grid[row][col].get_plant()->get_Image();
-                      grid[row][col].tile_p.setImage(img);
-                      grid[row][col].tile_a.setColor(sf::Color::Transparent);
-                  }
-
-                  // else it's gonna be flower
-                  if (grid[row][col].p_id == 'F')
-                  {
-                      sf::Image img = grid[row][col].get_plant()->get_Image();
-                      grid[row][col].tile_p.setImage(img);
-                      grid[row][col].tile_a.setColor(sf::Color::Transparent);
-                  }
-               }
-               else // we create a new carnivore and put it in the old square
-               {
-                    c->set_is_pregnant(false);
-
-                    // create new carnivore, put it in old square
-                    Carnivore* h = (Carnivore*)Factory::create_being(type);
-                    grid[row][col].a_id = type;
-                    sf::Vector2f v;
-                    v.x = (col * TILE_SIZE);
-                    v.y = (row * TILE_SIZE) + 100;
-                    grid[row][col].set_animal(c);
-                    grid[row][col].tile_a.setPostition(v);
-                    if(type == 'W')
-                    {
-                        grid[row][col].tile_a.setImage(h->get_Image());
-                    }
-                    else if(type == 'B')
-                    {
-                        //cout << "creating new bear" << endl;
-                        grid[row][col].tile_a.setImage(h->get_Image());
-                    }
-                 }
-                 */
              }
              else // there are no neighbors
              {
-                 // get the surrounding squares that have to predators (we already know
-                 // that they have to prey), and randomly choose on to wander to
-                 Ordered_Pair dest = get_square_without_fellow_predators(row, col);
+                 // check to see if the hunt is on
+                 if (c->get_curr_calories() <= c->get_min_calories_to_hunt())
+                 {
+                     Ordered_Pair hunting_destination;
 
-                  // move the carnivore to the new space
-                  grid[dest.row][dest.col].set_animal(c);
-                  grid[dest.row][dest.col].a_id = type;
-                  if (type == 'W')
-                  {
-                       sf::Vector2f v;
-                       v.x = (dest.col * TILE_SIZE);
-                       v.y = (dest.row * TILE_SIZE) + 100;
+                     // first, see if there are any prey 2 squares away
+                     if (prey_is_two_squares_away(hunting_destination, row, col))
+                     {
+                         // move the carnivore to the new space
+                         grid[hunting_destination.row][hunting_destination.col].set_animal(c);
+                         grid[hunting_destination.row][hunting_destination.col].a_id = type;
+                         if (type == 'W')
+                         {
+                              sf::Vector2f v;
+                              v.x = (hunting_destination.col * TILE_SIZE);
+                              v.y = (hunting_destination.row * TILE_SIZE) + 100;
 
-                       grid[dest.row][dest.col].tile_a.setPostition(v);
-                       grid[dest.row][dest.col].tile_a.setImage(c->get_Image());
-                  }
-                  else if (type == 'B')
-                  {
-                       sf::Vector2f v;
-                       v.x = (dest.col * TILE_SIZE);
-                       v.y = (dest.row * TILE_SIZE) + 100;
+                              grid[hunting_destination.row][hunting_destination.col].tile_a.setPostition(v);
+                              grid[hunting_destination.row][hunting_destination.col].tile_a.setImage(c->get_Image());
+                         }
+                         else if (type == 'B')
+                         {
+                              sf::Vector2f v;
+                              v.x = (hunting_destination.col * TILE_SIZE);
+                              v.y = (hunting_destination.row * TILE_SIZE) + 100;
 
-                       grid[dest.row][dest.col].tile_a.setPostition(v);
-                       grid[dest.row][dest.col].tile_a.setImage(c->get_Image());
-                  }
+                              grid[hunting_destination.row][hunting_destination.col].tile_a.setPostition(v);
+                              grid[hunting_destination.row][hunting_destination.col].tile_a.setImage(c->get_Image());
+                         }
 
-                  // if the carnivore will not reproduce, we change the
-                  // square back to what it was
-                                  // change old grid square from herbivore to plant
-                  if(!c->get_is_pregnant())
-                  {
-                      grid[row][col].a_id = ' ';
-                      grid[row][col].set_animal(NULL);
-                      grid[row][col].tile_a.setColor(sf::Color::Transparent);
-                  }
-                  else
-                  {
-                      c->set_is_pregnant(false);
+                         // move the carnivore OUT of the old space
+                         grid[row][col].a_id = ' ';
+                         grid[row][col].set_animal(NULL);
+                         grid[row][col].tile_a.setColor(sf::Color::Transparent);
+                     }
+                     else if (prey_is_three_squares_away(hunting_destination, row, col))
+                     {
+                         // move the carnivore to the new space
+                         grid[hunting_destination.row][hunting_destination.col].set_animal(c);
+                         grid[hunting_destination.row][hunting_destination.col].a_id = type;
+                         if (type == 'W')
+                         {
+                              sf::Vector2f v;
+                              v.x = (hunting_destination.col * TILE_SIZE);
+                              v.y = (hunting_destination.row * TILE_SIZE) + 100;
 
-                      Carnivore* c = (Carnivore*)Factory::create_being(type);
-                      grid[row][col].a_id = type;
+                              grid[hunting_destination.row][hunting_destination.col].tile_a.setPostition(v);
+                              grid[hunting_destination.row][hunting_destination.col].tile_a.setImage(c->get_Image());
+                         }
+                         else if (type == 'B')
+                         {
+                              sf::Vector2f v;
+                              v.x = (hunting_destination.col * TILE_SIZE);
+                              v.y = (hunting_destination.row * TILE_SIZE) + 100;
 
-                      sf::Vector2f v;
-                      v.x = (col * TILE_SIZE);
-                      v.y = (row * TILE_SIZE) + 100;
+                              grid[hunting_destination.row][hunting_destination.col].tile_a.setPostition(v);
+                              grid[hunting_destination.row][hunting_destination.col].tile_a.setImage(c->get_Image());
+                         }
 
-                      grid[row][col].set_animal(c);
+                         // move the carnivore OUT of the old space
+                         grid[row][col].a_id = ' ';
+                         grid[row][col].set_animal(NULL);
+                         grid[row][col].tile_a.setColor(sf::Color::Transparent);
+                     }
+                 }
+                 else // hunting isn't happening, so we just move randomly
+                 {
+                      // get the surrounding squares that have to predators (we already know
+                     // that they have to prey), and randomly choose on to wander to
+                      Ordered_Pair dest = get_square_without_fellow_predators(row, col);
 
-                      grid[row][col].tile_a.setPostition(v);
-                      if(type == 'W')
-                      {
-                          grid[row][col].tile_a.setImage(c->get_Image());
-                      }
-                      else if(type == 'R')
-                      {
-                          grid[row][col].tile_a.setImage(c->get_Image());
-                      }
-                   }
+                     // move the carnivore to the new space
+                     grid[dest.row][dest.col].set_animal(c);
+                     grid[dest.row][dest.col].a_id = type;
+                     if (type == 'W')
+                     {
+                          sf::Vector2f v;
+                          v.x = (dest.col * TILE_SIZE);
+                          v.y = (dest.row * TILE_SIZE) + 100;
+
+                          grid[dest.row][dest.col].tile_a.setPostition(v);
+                          grid[dest.row][dest.col].tile_a.setImage(c->get_Image());
+                     }
+                     else if (type == 'B')
+                     {
+                          sf::Vector2f v;
+                          v.x = (dest.col * TILE_SIZE);
+                          v.y = (dest.row * TILE_SIZE) + 100;
+
+                          grid[dest.row][dest.col].tile_a.setPostition(v);
+                          grid[dest.row][dest.col].tile_a.setImage(c->get_Image());
+                     }
+
+                     // if the carnivore will not reproduce, we change the
+                     // square back to what it was
+                     if(!c->get_is_pregnant())
+                     {
+                         grid[row][col].a_id = ' ';
+                         grid[row][col].set_animal(NULL);
+                         grid[row][col].tile_a.setColor(sf::Color::Transparent);
+                     }
+                     else
+                     {
+                         c->set_is_pregnant(false);
+
+                         Carnivore* c = (Carnivore*)Factory::create_being(type);
+                         grid[row][col].a_id = type;
+
+                         sf::Vector2f v;
+                         v.x = (col * TILE_SIZE);
+                         v.y = (row * TILE_SIZE) + 100;
+
+                         grid[row][col].set_animal(c);
+
+                         grid[row][col].tile_a.setPostition(v);
+                         if(type == 'W')
+                         {
+                             grid[row][col].tile_a.setImage(c->get_Image());
+                         }
+                         else if(type == 'R')
+                         {
+                             grid[row][col].tile_a.setImage(c->get_Image());
+                         }
+                     }
+                 }
              }
-             //
-             // put HUNTING CODE HERE
-             //
          }
      }
  }
@@ -563,6 +581,161 @@ void GUI::herbivore_turn(int row, int col, char type)
     }
 }
 
+bool GUI::prey_is_two_squares_away(Ordered_Pair& hunting_destination, int col, int row)
+{
+    vector<Ordered_Pair> possible_destinations;
+
+    // look left
+    if (col-2 >= 0)
+    {
+        if (grid[row][col-2].a_id == 'R' || grid[row][col-2].a_id == 'D')
+        {
+            if (grid[row][col-1].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = row;
+                n.col = col-1;
+                possible_destinations.push_back(n);
+            }
+        }
+    }
+
+    // look up
+    if (row-2 >= 0)
+    {
+        if (grid[row-2][col].a_id == 'R' || grid[row-2][col].a_id == 'D')
+        {
+            if (grid[row-1][col].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = row-1;
+                n.col = col;
+                possible_destinations.push_back(n);
+            }
+        }
+    }
+
+    // look right
+    if (col+2 < NUMCOLS)
+    {
+        if (grid[row][col+2].a_id == 'R' || grid[row][col+2].a_id == 'D')
+        {
+            if (grid[row][col+1].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = row;
+                n.col = col+1;
+                possible_destinations.push_back(n);
+            }
+        }
+    }
+
+    // look down
+    if (row+2 < NUMROWS)
+    {
+        if (grid[row+2][col].a_id == 'R' || grid[row+2][col].a_id == 'D')
+        {
+            if (grid[row+1][col].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = row+1;
+                n.col = col;
+                possible_destinations.push_back(n);
+            }
+        }
+    }
+
+    if (possible_destinations.empty())
+    {
+        return false;
+    }
+    else
+    {
+        int ran_num = rand()%possible_destinations.size();
+        hunting_destination.row = possible_destinations[ran_num].row;
+        hunting_destination.col = possible_destinations[ran_num].col;
+        return true;
+    }
+}
+
+bool GUI::prey_is_three_squares_away(Ordered_Pair& hunting_destination, int row, int col)
+{
+    vector<Ordered_Pair> possible_destinations;
+
+    // look left
+    if (col-3 >= 0)
+    {
+        if (grid[row][col-3].a_id == 'R' || grid[row][col-3].a_id == 'D')
+        {
+            if (grid[row][col-2].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = row;
+                n.col = col-2;
+                possible_destinations.push_back(n);
+            }
+        }
+    }
+
+    // look up
+    if (row-3 >= 0)
+    {
+        if (grid[row-3][col].a_id == 'R' || grid[row-3][col].a_id == 'D')
+        {
+            if (grid[row-2][col].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = row-2;
+                n.col = col;
+                possible_destinations.push_back(n);
+            }
+        }
+    }
+
+    // look right
+    if (col+3 < NUMCOLS)
+    {
+        if (grid[row][col+3].a_id == 'R' || grid[row][col+3].a_id == 'D')
+        {
+            if (grid[row][col+2].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = row;
+                n.col = col+2;
+                possible_destinations.push_back(n);
+            }
+        }
+    }
+
+    // look down
+    if (row+3 < NUMROWS)
+    {
+        if (grid[row+3][col].a_id == 'R' || grid[row+3][col].a_id == 'D')
+        {
+            if (grid[row+2][col].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = row+2;
+                n.col = col;
+                possible_destinations.push_back(n);
+            }
+        }
+    }
+
+    if (possible_destinations.empty())
+    {
+        return false;
+    }
+    else
+    {
+        int ran_num = rand()%possible_destinations.size();
+        hunting_destination.row = possible_destinations[ran_num].row;
+        hunting_destination.col = possible_destinations[ran_num].col;
+        return true;
+    }
+}
+
+
 Ordered_Pair GUI::get_square_without_fellow_predators(int row, int col)
 {
     vector <Ordered_Pair> neighbors;
@@ -674,7 +847,6 @@ Ordered_Pair GUI::get_square_without_fellow_predators(int row, int col)
         dest.row = neighbors[ran_num].row;
         dest.col = neighbors[ran_num].col;
     }
-    cout << "Random destination is (" << dest.row << "," << dest.col << ")" << endl;
     return dest;
 }
 
@@ -774,7 +946,6 @@ void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
         }
     }
 }
-
 
 
 bool GUI::there_is_neighboring_predator(Ordered_Pair dest, Ordered_Pair predator, char direction)
@@ -1099,9 +1270,6 @@ vector<Ordered_Pair> GUI::get_neighbors_that_have_only_plants(int row, int col)
 }
 
 
-
-
-
 void GUI::drawGrid(){
     for(int i = 0;i < 40; ++i){
         for(int j = 0;j < 30; ++j)
@@ -1111,7 +1279,6 @@ void GUI::drawGrid(){
         }
     }
 }
-
 
 
 void GUI::populate_grid()
