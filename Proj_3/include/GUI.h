@@ -9,6 +9,7 @@
 #include "Wolf.h"
 #include "Bear.h"
 #include "Factory.h"
+#include "simpleButton.h"
 
 // macros
 #define NUMROWS     30 //30
@@ -52,8 +53,12 @@ class GUI
         Ordered_Pair* create_deer_array(Ordered_Pair*);
         //members
         sf::RenderWindow *app;
-        textButton *close = new textButton("Close",24,5,10);
-        textButton *start = new textButton("Start",24,100,10);
+        /*
+            textButton *close = new textButton("Close",24,5,10);
+            textButton *start = new textButton("Start",24,100,10);
+        */
+        simpleButton *close = new simpleButton("Close",24,5,10);
+        simpleButton *start = new simpleButton("Start",24,100,10);
         Square grid[NUMROWS][NUMCOLS];
         void step();
         void animal_turn(int,int,char);

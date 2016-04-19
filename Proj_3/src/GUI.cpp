@@ -9,6 +9,7 @@
 #include "Wolf.h"
 #include "Bear.h"
 #include "Rabbit.h"
+#include "simpleButton.h"
 using namespace std;
 
 const int mSecs = 500;
@@ -100,7 +101,7 @@ void GUI::Run()
             //cout << "STEP" << endl;
             //print_ASCII('a');
             step();
-            pause();
+            //pause();
 
         }
 
