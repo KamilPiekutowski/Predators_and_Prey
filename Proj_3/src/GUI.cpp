@@ -167,6 +167,7 @@ void GUI::step()
     // Display the number of animals, and end the program if
     // there are no more predators or prey
     //
+    /*
     char winner = display_stats_check_for_end_of_program();
     if (winner == 'c')
     {
@@ -180,6 +181,7 @@ void GUI::step()
         //system("pause");
         exit(EXIT_SUCCESS);
     }
+    */
 }
 
 char GUI::display_stats_check_for_end_of_program()
@@ -473,64 +475,58 @@ void GUI::herbivore_turn(int row, int col, char type)
     if (!h->get_move_made())
     {
        h->set_move_made(true);
-
        h->hunger();
        h->age();
 
        if (h->get_curr_age() >= h->get_max_age() || h->get_curr_calories() == 0)
        {
            h->die();
-           //delete[] &h;
-           //grid[row][col].set_animal(NULL);
-           //cout << "Dead Herbivore" << endl;
            grid[row][col].a_id = ' ';
            grid[row][col].tile_a.setColor(sf::Color::Transparent);
-
        }
        else
        {
+           // check to see if any neighboring squares have plants to eat
            vector<Ordered_Pair> neighbors = get_neighbors_that_have_only_plants(row, col);
-            if (!neighbors.empty()) // else the turn ends
-            {
-                Ordered_Pair dest = get_neighbor_with_highest_caloric_yield(neighbors);
+           if (!neighbors.empty()) // else the turn ends
+           {
+               Ordered_Pair dest = get_neighbor_with_highest_caloric_yield(neighbors);
 
-                // next, will we reproduce in this turn
-                determine_if_herbivore_will_reproduce(h,type);
-                //if (will_reproduce) cout << "Rabbit may be born" << endl;
+               // next, will we reproduce in this turn
+               determine_if_herbivore_will_reproduce(h,type);
 
-                // move to grid space
-                grid[dest.row][dest.col].set_animal(h);
-                grid[dest.row][dest.col].a_id = type;
-                if (type == 'R')
-                {
-                   sf::Vector2f v;
-                   v.x = (dest.col * TILE_SIZE);
-                   v.y = (dest.row * TILE_SIZE) + 100;
+               // move to grid space
+               grid[dest.row][dest.col].set_animal(h);
+               grid[dest.row][dest.col].a_id = type;
+               if (type == 'R')
+               {
+                  sf::Vector2f v;
+                  v.x = (dest.col * TILE_SIZE);
+                  v.y = (dest.row * TILE_SIZE) + 100;
 
-                   grid[dest.row][dest.col].tile_a.setPostition(v);
-                   grid[dest.row][dest.col].tile_a.setImage(h->get_Image());
-                }
-                else if (type == 'D')
-                {
-                   sf::Vector2f v;
-                   v.x = (dest.col * TILE_SIZE);
-                   v.y = (dest.row * TILE_SIZE) + 100;
+                  grid[dest.row][dest.col].tile_a.setPostition(v);
+                  grid[dest.row][dest.col].tile_a.setImage(h->get_Image());
+               }
+               else if (type == 'D')
+               {
+                  sf::Vector2f v;
+                  v.x = (dest.col * TILE_SIZE);
+                  v.y = (dest.row * TILE_SIZE) + 100;
 
-                   grid[dest.row][dest.col].tile_a.setPostition(v);
-                   grid[dest.row][dest.col].tile_a.setImage(h->get_Image());
-                }
+                  grid[dest.row][dest.col].tile_a.setPostition(v);
+                  grid[dest.row][dest.col].tile_a.setImage(h->get_Image());
+               }
 
-                // change old grid square from herbivore to plant
-                if(!h->get_is_pregnant()){
-
-                    grid[row][col].a_id = ' ';
-                    grid[row][col].set_animal(NULL);
+               // change old grid square from herbivore to plant
+               if(!h->get_is_pregnant())
+               {
+                   grid[row][col].a_id = ' ';
+                   grid[row][col].set_animal(NULL);
                     //if (grid[row][col].p_id == 'G')
                     //{
                         //sf::Image img = grid[row][col].get_plant()->get_Image();
                         //grid[row][col].tile_p.setImage(img);
-                        grid[row][col].tile_a.setColor(sf::Color::Transparent);
-
+                   grid[row][col].tile_a.setColor(sf::Color::Transparent);
                 }
                 else
                 {
@@ -546,36 +542,33 @@ void GUI::herbivore_turn(int row, int col, char type)
                     grid[row][col].set_animal(h);
 
                     grid[row][col].tile_a.setPostition(v);
-                    if(type == 'D'){
+                    if(type == 'D')
+                    {
                         grid[row][col].tile_a.setImage(h->get_Image());
                     }
-                    else if(type == 'R'){
+                    else if(type == 'R')
+                    {
                         grid[row][col].tile_a.setImage(h->get_Image());
                     }
-
-                }
-
-                //
-                // now that we've moved there, we check for a neighboring predator.  If there
-                // is one, we flee.  If there is not, we eat, possibly reproduce, and end turn.
-                //
-                Ordered_Pair neighboring_predator;
-                neighboring_predator.col = -999;
-                neighboring_predator.row = -999;
-                char direction = ' ';
+               }
+               //
+               // now that we've moved there, we check for a neighboring predator.  If there
+               // is one, we flee.  If there is not, we eat, possibly reproduce, and end turn.
+               //
+               Ordered_Pair neighboring_predator;
+               neighboring_predator.col = -999;
+               neighboring_predator.row = -999;
+               char direction = ' ';
 
                if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
                {
-                    if(h->get_curr_calories() < h->get_max_calories()){
+                    if(h->get_curr_calories() < h->get_max_calories())
+                    {
                         herbivore_eats(dest, h);
                     }
-                    /*
-                    if (h->get_is_pregnant())
-                    {
-                        h->set_is_pregnant(false);
-                    }
-                    */
                }
+
+                //check_two_spaces_directly
            }
        }
     }
