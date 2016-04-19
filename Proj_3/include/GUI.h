@@ -20,6 +20,7 @@
 #define NUMBEAR     2 //2
 #define NUMGRASS    1000
 #define NUMFLOWERS  200 //200
+#define FPS_RATE 16
 
 //reproduction rates
 /*
@@ -51,14 +52,19 @@ class GUI
         void create_animals();
         Ordered_Pair* create_rabbit_array();
         Ordered_Pair* create_deer_array(Ordered_Pair*);
+
         //members
         sf::RenderWindow *app;
         /*
             textButton *close = new textButton("Close",24,5,10);
             textButton *start = new textButton("Start",24,100,10);
         */
-        simpleButton *close = new simpleButton("Close",24,5,10);
-        simpleButton *start = new simpleButton("Start",24,100,10);
+        simpleButton *close = new simpleButton("img/close.png",100,700,0);
+        simpleButton *start = new simpleButton("img/play.png",100,100,0);
+        simpleButton *pauseButton = new simpleButton("img/pause.png",100,0,0);
+        simpleButton *decreaseSpeed = new simpleButton("img/backward.png",100,250,0);
+        simpleButton *increaseSpeed = new simpleButton("img/forward.png",100,350,0);
+
         Square grid[NUMROWS][NUMCOLS];
         void step();
         void animal_turn(int,int,char);
@@ -77,11 +83,13 @@ class GUI
         char display_stats_check_for_end_of_program();
         bool prey_is_three_squares_away(Ordered_Pair&,int,int);
         bool prey_is_two_squares_away(Ordered_Pair&,int,int);
-        void pause(unsigned);
+        void setSpeed(int);
         void print_ASCII(char);
     protected:
     private:
         bool isRunning = false;
+        bool isStarted = false;
+        int speed;
 
 };
 

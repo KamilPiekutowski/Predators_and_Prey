@@ -19,8 +19,9 @@ class simpleButton
         bool isHover(sf::Vector2i);
 
         //members
-        sf::Text text;
-        sf::RectangleShape border;
+        sf::Image Image;
+        sf::Texture Texture;
+        sf::Sprite Sprite;
         Vector2i posStart;
         Vector2i posEnd;
     protected:
@@ -28,10 +29,8 @@ class simpleButton
         //methods
         void Init(String,int,int,int);
 
-        int fontSize;
-        String fontText;
+        int size;
         String fileName;
-        sf::Font font;
 
 
 

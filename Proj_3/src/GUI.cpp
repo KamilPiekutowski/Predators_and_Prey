@@ -14,17 +14,14 @@ using namespace std;
 
 const int mSecs = 500;
 
-void GUI::pause(unsigned secs = 1U)
-{
-   clock_t wait = secs+mSecs+clock();
-   while(wait > clock()) continue;
-}
 
 GUI::GUI()
 {
     app = new sf::RenderWindow(sf::VideoMode(800, 700), "SFML window");
     srand (time(NULL));
     populate_grid();
+    this->speed = FPS_RATE*16;
+
     //print_ASCII('p');
 }
 
@@ -58,12 +55,43 @@ void GUI::Run()
                 // left mouse button is pressed: shoot
                 cout << "Mouse Pressed" << endl;
                 if(close->isHover(mousePos)){
+                    cout << "exit simulation" << endl;
                     app->close();
                 }
 
                 if(start->isHover(mousePos)){
-                    cout << "Start simulation" << endl;
+                    cout << "play simulation" << endl;
+                    this->isStarted = true; //enables pause button
                     this->isRunning = true;
+                }
+                if(pauseButton->isHover(mousePos)){
+                    cout << "pause/resume simulation" << endl;
+                    if(isStarted){
+                        if(isRunning){
+                            this->isRunning = false;
+                        }
+                        else{
+                            this->isRunning = true;
+                        }
+                    }
+                }
+                if(increaseSpeed->isHover(mousePos)){
+                    cout << "increase simulation speed" << endl;
+                    int curr_val = speed/FPS_RATE;
+                    curr_val /= 2;
+                    if(curr_val < 1){
+                        curr_val = 1;
+                    }
+                    setSpeed(curr_val*FPS_RATE);
+                }
+                if(decreaseSpeed->isHover(mousePos)){
+                    cout << "increase simulation speed" << endl;
+                    int curr_val = speed/FPS_RATE;
+                    curr_val *= 2;
+                    if(curr_val > 32){
+                        curr_val = 32;
+                    }
+                    setSpeed(curr_val*FPS_RATE);
                 }
 
             }
@@ -72,28 +100,16 @@ void GUI::Run()
 
 
 
-            if(close->isHover(mousePos)){
-                //cout << "Close" << endl;
-                close->text.setColor(sf::Color::Yellow);
-            }
-            else{
-                close->text.setColor(sf::Color::White);
-            }
 
-            if( start->isHover(mousePos)){
-                //cout << "Close" << endl;
-                start->text.setColor(sf::Color::Yellow);
-            }
-            else{
-                start->text.setColor(sf::Color::White);
-            }
+
+
         }
 
         //setting steps to follow timer routine
         sf::Time dt = deltaClock.getElapsedTime();
         timer = dt.asMilliseconds();
-
-        if((timer > 16*10) && this->isRunning ) { //need 16 for to get 60fps
+        //cout << "speed " << speed << endl;
+        if((timer > speed) && this->isRunning ) { //need 16 for to get 60fps
             //cout << "Time:" << timer << endl;
 
             timer = 0;
@@ -108,14 +124,19 @@ void GUI::Run()
         // Clear screen
         app->clear();
 
-        //app.draw(text);
-        //app->draw(close->border);
-        app->draw(close->text);
-        //app->draw(start->border);
-        app->draw(start->text);
+        app->draw(close->Sprite);
+
+        app->draw(start->Sprite);
+
+        app->draw(pauseButton->Sprite);
+
+        app->draw(increaseSpeed->Sprite);
+
+        app->draw(decreaseSpeed->Sprite);
         // Update the windo
+
         drawGrid();
-        //cout << "Ddraw " << endl;
+
         app->display();
     }
 
@@ -1472,4 +1493,9 @@ Ordered_Pair GUI::get_random_move(vector<Ordered_Pair> neighbors)
     dest.row = neighbors[r].row;
     dest.col = neighbors[r].col;
     return dest;
+}
+
+void GUI::setSpeed(int s)
+{
+    speed = s;
 }
