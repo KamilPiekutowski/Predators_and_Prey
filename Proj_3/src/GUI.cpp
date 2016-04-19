@@ -2,22 +2,20 @@
 #include <iostream>
 #include <algorithm>
 #include <time.h>
-#include <ctime>
 #include "Grass.h"
 #include "Flower.h"
 #include "Deer.h"
 #include "Wolf.h"
 #include "Bear.h"
 #include "Rabbit.h"
+#define VERY_FAST_SPEED 100
+#define FAST_SPEED 160
+#define MEDIUM_SPEED 500
+#define SLOW_SPEED 1000
+#define VERY_SLOW SPEED 1300
 using namespace std;
 
 const int mSecs = 500;
-
-void GUI::pause(unsigned secs = 1U)
-{
-   clock_t wait = secs+mSecs+clock();
-   while(wait > clock()) continue;
-}
 
 GUI::GUI()
 {
@@ -92,7 +90,7 @@ void GUI::Run()
         sf::Time dt = deltaClock.getElapsedTime();
         timer = dt.asMilliseconds();
 
-        if((timer > 16*10) && this->isRunning ) { //need 16 for to get 60fps
+        if((timer > MEDIUM_SPEED) && this->isRunning ) { //need 16 for to get 60fps
             //cout << "Time:" << timer << endl;
 
             timer = 0;
@@ -100,7 +98,6 @@ void GUI::Run()
             //cout << "STEP" << endl;
             //print_ASCII('a');
             step();
-            pause();
 
         }
 
@@ -490,10 +487,9 @@ void GUI::herbivore_turn(int row, int col, char type)
            vector<Ordered_Pair> neighbors = get_neighbors_that_have_only_plants(row, col);
            if (!neighbors.empty()) // else the turn ends
            {
-               Ordered_Pair dest = get_neighbor_with_highest_caloric_yield(neighbors);
 
-               // next, will we reproduce in this turn
-               determine_if_herbivore_will_reproduce(h,type);
+               // get the spot to move to
+               Ordered_Pair dest = get_neighbor_with_highest_caloric_yield(neighbors);
 
                // move to grid space
                grid[dest.row][dest.col].set_animal(h);
@@ -517,62 +513,276 @@ void GUI::herbivore_turn(int row, int col, char type)
                   grid[dest.row][dest.col].tile_a.setImage(h->get_Image());
                }
 
-               // change old grid square from herbivore to plant
-               if(!h->get_is_pregnant())
-               {
-                   grid[row][col].a_id = ' ';
-                   grid[row][col].set_animal(NULL);
-                    //if (grid[row][col].p_id == 'G')
-                    //{
-                        //sf::Image img = grid[row][col].get_plant()->get_Image();
-                        //grid[row][col].tile_p.setImage(img);
-                   grid[row][col].tile_a.setColor(sf::Color::Transparent);
-                }
-                else
-                {
-                    h->set_is_pregnant(false);
-
-                    Herbivore* h = (Herbivore*)Factory::create_being(type);
-                    grid[row][col].a_id = type;
-
-                    sf::Vector2f v;
-                    v.x = (col * TILE_SIZE);
-                    v.y = (row * TILE_SIZE) + 100;
-
-                    grid[row][col].set_animal(h);
-
-                    grid[row][col].tile_a.setPostition(v);
-                    if(type == 'D')
-                    {
-                        grid[row][col].tile_a.setImage(h->get_Image());
-                    }
-                    else if(type == 'R')
-                    {
-                        grid[row][col].tile_a.setImage(h->get_Image());
-                    }
-               }
-               //
-               // now that we've moved there, we check for a neighboring predator.  If there
-               // is one, we flee.  If there is not, we eat, possibly reproduce, and end turn.
-               //
-               Ordered_Pair neighboring_predator;
-               neighboring_predator.col = -999;
-               neighboring_predator.row = -999;
+                              //
+               // now that we've moved, we need to look for a neighboring predator.
+               // If there is not one, we eat and procreate, else, we try to evade.
+               // If we can't evade, we do nothing.
                char direction = ' ';
-
-               if (!there_is_neighboring_predator(dest, neighboring_predator, direction))
+               if (there_is_neighboring_predator(dest, direction))
                {
-                    if(h->get_curr_calories() < h->get_max_calories())
-                    {
-                        herbivore_eats(dest, h);
-                    }
-               }
+                   // evade
+                   if (h->get_curr_calories() >= h->get_min_calories_to_evade())
+                   {
+                       Ordered_Pair evasion_dest = get_evasion_destination(dest, direction);
 
-                //check_two_spaces_directly
-           }
-       }
+                       // move to grid space
+                       grid[evasion_dest.row][evasion_dest.col].set_animal(h);
+                       grid[evasion_dest.row][evasion_dest.col].a_id = type;
+                       if (type == 'R')
+                       {
+                          sf::Vector2f v;
+                          v.x = (evasion_dest.col * TILE_SIZE);
+                          v.y = (evasion_dest.row * TILE_SIZE) + 100;
+
+                          grid[evasion_dest.row][evasion_dest.col].tile_a.setPostition(v);
+                          grid[evasion_dest.row][evasion_dest.col].tile_a.setImage(h->get_Image());
+                       }
+                       else if (type == 'D')
+                       {
+                          sf::Vector2f v;
+                          v.x = (evasion_dest.col * TILE_SIZE);
+                          v.y = (evasion_dest.row * TILE_SIZE) + 100;
+
+                          grid[evasion_dest.row][evasion_dest.col].tile_a.setPostition(v);
+                          grid[evasion_dest.row][evasion_dest.col].tile_a.setImage(h->get_Image());
+                       }
+
+                       // change old square back to plant
+                       grid[row][col].a_id = ' ';
+                       grid[row][col].set_animal(NULL);
+                        //if (grid[row][col].p_id == 'G')
+                        //{
+                            //sf::Image img = grid[row][col].get_plant()->get_Image();
+                            //grid[row][col].tile_p.setImage(img);
+                       grid[row][col].tile_a.setColor(sf::Color::Transparent);
+                   }
+               }
+               else // there is no neighboring predator, and we can move there, eat, and procreate
+               {
+                   determine_if_herbivore_will_reproduce(h,type);
+
+                   // eat
+                   if(h->get_curr_calories() < h->get_max_calories())
+                   {
+                       herbivore_eats(dest, h);
+                   }
+
+                   // change where we came from back to a plant, or procreate
+                   // change old grid square from herbivore to plant
+                   if(!h->get_is_pregnant())
+                   {
+                       grid[row][col].a_id = ' ';
+                       grid[row][col].set_animal(NULL);
+                        //if (grid[row][col].p_id == 'G')
+                        //{
+                            //sf::Image img = grid[row][col].get_plant()->get_Image();
+                            //grid[row][col].tile_p.setImage(img);
+                       grid[row][col].tile_a.setColor(sf::Color::Transparent);
+                    }
+                    else
+                    {
+                        h->set_is_pregnant(false);
+
+                        Herbivore* h = (Herbivore*)Factory::create_being(type);
+                        grid[row][col].a_id = type;
+
+                        sf::Vector2f v;
+                        v.x = (col * TILE_SIZE);
+                        v.y = (row * TILE_SIZE) + 100;
+
+                        grid[row][col].set_animal(h);
+
+                        grid[row][col].tile_a.setPostition(v);
+                        if(type == 'D')
+                        {
+                            grid[row][col].tile_a.setImage(h->get_Image());
+                        }
+                        else if(type == 'R')
+                        {
+                            grid[row][col].tile_a.setImage(h->get_Image());
+                        }
+                    }
+                }
+            }
+        }
     }
 }
+
+Ordered_Pair GUI::get_evasion_destination(Ordered_Pair dest, char direction)
+{
+    vector<Ordered_Pair> possible_evasion_destinations;
+
+    //
+    // if direction is left, we need to look right, up, and down
+    //
+    if (direction == 'l')
+    {
+        // look right
+        if (dest.col+2 < NUMCOLS)
+        {
+            if (grid[dest.row][dest.col+2].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row;
+                n.col = dest.col+2;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+
+        // look up
+        if (dest.row-2 >= 0)
+        {
+            if (grid[dest.row-2][dest.col].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row-2;
+                n.col = dest.col;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+
+        // look down
+        if (dest.row+2 < NUMCOLS)
+        {
+            if (grid[dest.row+2][dest.col].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row+2;
+                n.col = dest.col;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+    }
+    else if (direction == 'r') // look up, down left
+    {
+        // look left
+        if (dest.col-2 >= 0)
+        {
+            if (grid[dest.row][dest.col-2].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row;
+                n.col = dest.col-2;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+
+        // look up
+        if (dest.row-2 >= 0)
+        {
+            if (grid[dest.row-2][dest.col].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row-2;
+                n.col = dest.col;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+
+        // look down
+        if (dest.row+2 < NUMCOLS)
+        {
+            if (grid[dest.row+2][dest.col].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row+2;
+                n.col = dest.col;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+    }
+    else if (direction == 'd') // look up, left, right
+    {
+        // look right
+        if (dest.col+2 < NUMCOLS)
+        {
+            if (grid[dest.row][dest.col+2].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row;
+                n.col = dest.col+2;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+
+        // look up
+        if (dest.row-2 >= 0)
+        {
+            if (grid[dest.row-2][dest.col].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row-2;
+                n.col = dest.col;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+
+        // look left
+        if (dest.col-2 >= 0)
+        {
+            if (grid[dest.row][dest.col-2].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row;
+                n.col = dest.col-2;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+    }
+    else if (direction == 'u') // left, right, down
+    {
+        // look down
+        if (dest.row+2 < NUMCOLS)
+        {
+            if (grid[dest.row+2][dest.col].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row+2;
+                n.col = dest.col;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+
+        // look left
+        if (dest.col-2 >= 0)
+        {
+            if (grid[dest.row][dest.col-2].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row;
+                n.col = dest.col-2;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+
+        // look right
+        if (dest.col+2 < NUMCOLS)
+        {
+            if (grid[dest.row][dest.col+2].a_id == ' ')
+            {
+                Ordered_Pair n;
+                n.row = dest.row;
+                n.col = dest.col+2;
+                possible_evasion_destinations.push_back(n);
+            }
+        }
+    }
+
+    Ordered_Pair evasion_dest;
+    if (possible_evasion_destinations.empty())
+    {
+        evasion_dest.row = dest.row;
+        evasion_dest.col = dest.col;
+    }
+    else
+    {
+        int ran_num = rand()%possible_evasion_destinations.size();
+        evasion_dest.row = possible_evasion_destinations[ran_num].row;
+        evasion_dest.col = possible_evasion_destinations[ran_num].col;
+    }
+    return evasion_dest;
+}
+
 
 bool GUI::prey_is_two_squares_away(Ordered_Pair& hunting_destination, int col, int row)
 {
@@ -941,7 +1151,7 @@ void GUI::herbivore_eats(Ordered_Pair dest, Herbivore* h)
 }
 
 
-bool GUI::there_is_neighboring_predator(Ordered_Pair dest, Ordered_Pair predator, char direction)
+bool GUI::there_is_neighboring_predator(Ordered_Pair dest, char direction)
 {
     bool is_predator = false;
     // look left
@@ -950,8 +1160,6 @@ bool GUI::there_is_neighboring_predator(Ordered_Pair dest, Ordered_Pair predator
         if (grid[dest.row][dest.col-1].a_id == 'W' ||
             grid[dest.row][dest.col-1].a_id == 'B')
         {
-            predator.row = dest.row;
-            predator.col = dest.col-1;
             direction = 'l';
             is_predator = true;
         }
@@ -963,8 +1171,6 @@ bool GUI::there_is_neighboring_predator(Ordered_Pair dest, Ordered_Pair predator
         if (grid[dest.row-1][dest.col].a_id == 'W' ||
             grid[dest.row-1][dest.col].a_id == 'B')
         {
-            predator.row = dest.row-1;
-            predator.col = dest.col;
             direction = 'u';
             is_predator = true;
         }
@@ -976,8 +1182,6 @@ bool GUI::there_is_neighboring_predator(Ordered_Pair dest, Ordered_Pair predator
         if (grid[dest.row][dest.col+1].a_id == 'W' ||
             grid[dest.row][dest.col+1].a_id == 'B')
         {
-            predator.row = dest.row;
-            predator.col = dest.col+1;
             direction = 'r';
             is_predator = true;
         }
@@ -989,8 +1193,6 @@ bool GUI::there_is_neighboring_predator(Ordered_Pair dest, Ordered_Pair predator
         if (grid[dest.row+1][dest.col].a_id == 'W' ||
             grid[dest.row+1][dest.col].a_id == 'B')
         {
-            predator.row = dest.row+1;
-            predator.col = dest.col;
             direction = 'd';
             is_predator = true;
         }

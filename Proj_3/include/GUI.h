@@ -65,14 +65,14 @@ class GUI
         Ordered_Pair get_random_move(vector<Ordered_Pair>);
         void determine_if_herbivore_will_reproduce(Herbivore*,char);
         void determine_if_carnivore_will_reproduce(Carnivore*,char);
-        bool there_is_neighboring_predator(Ordered_Pair,Ordered_Pair,char);
+        bool there_is_neighboring_predator(Ordered_Pair,char);
         void herbivore_eats(Ordered_Pair,Herbivore*);
         void carnivore_eats(Ordered_Pair,Carnivore*,int,int);
         Ordered_Pair get_square_without_fellow_predators(int,int);
         char display_stats_check_for_end_of_program();
         bool prey_is_three_squares_away(Ordered_Pair&,int,int);
         bool prey_is_two_squares_away(Ordered_Pair&,int,int);
-        void pause(unsigned);
+        Ordered_Pair get_evasion_destination(Ordered_Pair,char);
         void print_ASCII(char);
     protected:
     private:
