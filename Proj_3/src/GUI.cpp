@@ -162,6 +162,7 @@ void GUI::step()
     // Display the number of animals, and end the program if
     // there are no more predators or prey
     //
+    /*
     char winner = display_stats_check_for_end_of_program();
     if (winner == 'c')
     {
@@ -175,6 +176,7 @@ void GUI::step()
         //system("pause");
         exit(EXIT_SUCCESS);
     }
+    */
 }
 
 char GUI::display_stats_check_for_end_of_program()
