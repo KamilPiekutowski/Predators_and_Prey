@@ -9,6 +9,7 @@
 #include "Wolf.h"
 #include "Bear.h"
 #include "Factory.h"
+#include "simpleButton.h"
 
 // macros
 #define NUMROWS     30 //30
@@ -19,6 +20,7 @@
 #define NUMBEAR     2 //2
 #define NUMGRASS    1000
 #define NUMFLOWERS  200 //200
+#define FPS_RATE 16
 
 //reproduction rates
 /*
@@ -50,10 +52,19 @@ class GUI
         void create_animals();
         Ordered_Pair* create_rabbit_array();
         Ordered_Pair* create_deer_array(Ordered_Pair*);
+
         //members
         sf::RenderWindow *app;
-        textButton *close = new textButton("Close",24,5,10);
-        textButton *start = new textButton("Start",24,100,10);
+        /*
+            textButton *close = new textButton("Close",24,5,10);
+            textButton *start = new textButton("Start",24,100,10);
+        */
+        simpleButton *close = new simpleButton("img/close.png",100,700,0);
+        simpleButton *start = new simpleButton("img/play.png",100,100,0);
+        simpleButton *pauseButton = new simpleButton("img/pause.png",100,0,0);
+        simpleButton *decreaseSpeed = new simpleButton("img/backward.png",100,250,0);
+        simpleButton *increaseSpeed = new simpleButton("img/forward.png",100,350,0);
+
         Square grid[NUMROWS][NUMCOLS];
         void step();
         void animal_turn(int,int,char);
@@ -65,18 +76,20 @@ class GUI
         Ordered_Pair get_random_move(vector<Ordered_Pair>);
         void determine_if_herbivore_will_reproduce(Herbivore*,char);
         void determine_if_carnivore_will_reproduce(Carnivore*,char);
-        bool there_is_neighboring_predator(Ordered_Pair,char);
+        bool there_is_neighboring_predator(Ordered_Pair,Ordered_Pair,char);
         void herbivore_eats(Ordered_Pair,Herbivore*);
         void carnivore_eats(Ordered_Pair,Carnivore*,int,int);
         Ordered_Pair get_square_without_fellow_predators(int,int);
         char display_stats_check_for_end_of_program();
         bool prey_is_three_squares_away(Ordered_Pair&,int,int);
         bool prey_is_two_squares_away(Ordered_Pair&,int,int);
-        Ordered_Pair get_evasion_destination(Ordered_Pair,char);
+        void setSpeed(int);
         void print_ASCII(char);
     protected:
     private:
         bool isRunning = false;
+        bool isStarted = false;
+        int speed;
 
 };
 

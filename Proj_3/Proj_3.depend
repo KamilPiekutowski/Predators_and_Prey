@@ -450,11 +450,11 @@
 1460533331 c:\users\rhayhurst\desktop\project_second_attempt\proj_3\include\rabbit.h
 	<Living_Being.h>
 
-1460581810 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\main.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\main.cpp
 	<SFML/Graphics.hpp>
 	"GUI.h"
 
-1460868710 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\gui.h
+1461041973 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\gui.h
 	<SFML/Graphics.hpp>
 	<iostream>
 	"textButton.h"
@@ -464,91 +464,95 @@
 	"Wolf.h"
 	"Bear.h"
 	"Factory.h"
+	"simpleButton.h"
 
-1460581810 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\textbutton.h
+1461035371 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\textbutton.h
 	<SFML/Graphics.hpp>
 	<iostream>
 
-1460779464 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\tile.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\tile.h
 	<SFML/Graphics.hpp>
 
-1460783081 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\square.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\square.h
 	"TILE.h"
 	"Living_Being.h"
 
-1460855045 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\living_being.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\living_being.h
 	<SFML/Graphics.hpp>
 
-1460778417 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\rabbit.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\rabbit.h
 	"Herbivore.h"
 	<Living_Being.h>
 	<iostream>
 
-1460581810 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\animals.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\animals.cpp
 	"Animals.h"
 
-1460581810 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\animals.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\animals.h
 	"Living_Being.h"
 
-1460780005 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\flower.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\flower.cpp
 	"Flower.h"
 	<iostream>
 
-1460778384 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\flower.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\flower.h
 	"Plant.h"
 	<iostream>
 
-1460780061 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\grass.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\grass.cpp
 	"Grass.h"
 	<iostream>
 
-1460778429 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\grass.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\grass.h
 	"Living_Being.h"
 	"Plant.h"
 	<iostream>
 
-1460779480 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\living_being.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\living_being.cpp
 	"Living_Being.h"
 	<iostream>
 
-1460867443 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\rabbit.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\rabbit.cpp
 	"Rabbit.h"
 	"Square.h"
 	<iostream>
 	"TILE.h"
 
-1460581810 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\square.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\square.cpp
 	"Square.h"
 
-1460581810 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\textbutton.cpp
+1461034916 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\textbutton.cpp
 	"textButton.h"
 
-1460795267 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\tile.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\tile.cpp
 	"TILE.h"
 
-1460868623 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
+1461041751 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\gui.cpp
 	"GUI.h"
 	<iostream>
 	<algorithm>
 	<time.h>
+	<ctime>
 	"Grass.h"
 	"Flower.h"
 	"Deer.h"
 	"Wolf.h"
 	"Bear.h"
+	"Rabbit.h"
+	"simpleButton.h"
 
-1460790977 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\plant.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\plant.h
 	"Living_Being.h"
 	<SFML/Graphics.hpp>
 
-1460790990 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\plant.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\plant.cpp
 	"Plant.h"
 
 1461016989 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\proj_3\main.cpp
 	<SFML/Graphics.hpp>
 	"GUI.h"
 
-1461033635 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\proj_3\include\gui.h
+1461025141 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\proj_3\include\gui.h
 	<SFML/Graphics.hpp>
 	<iostream>
 	"textButton.h"
@@ -669,10 +673,10 @@
 	<Living_Being.h>
 	<iostream>
 
-1460855045 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\herbivore.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\herbivore.h
 	<Living_Being.h>
 
-1460855045 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\factory.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\factory.h
 	"Living_Being.h"
 	"Grass.h"
 	"Flower.h"
@@ -682,28 +686,28 @@
 	"Bear.h"
 	"Empty.h"
 
-1460778386 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\deer.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\deer.h
 	"Herbivore.h"
 	<Living_Being.h>
 	<iostream>
 
-1460867443 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\deer.cpp
+1461034291 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\deer.cpp
 	"Deer.h"
 
-1460766453 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\factory.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\factory.cpp
 	"Factory.h"
 
-1460855045 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\herbivore.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\herbivore.cpp
 	"Herbivore.h"
 	"Square.h"
 	<iostream>
 
-1460791431 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\empty.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\empty.h
 	"Living_Being.h"
 	"Plant.h"
 	<iostream>
 
-1460792192 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\empty.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\empty.cpp
 	"Empty.h"
 
 1460832501 source:c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\main.cpp
@@ -861,25 +865,25 @@
 1460836682 c:\users\rhayhurst\desktop\project_version_control\predators_and_prey\predators_and_prey\proj_3\include\bear.h
 	"Carnivore.h"
 
-1460855045 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\wolf.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\wolf.h
 	"Carnivore.h"
 
-1460855045 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\carnivore.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\carnivore.h
 	<Living_Being.h>
 
-1460855045 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\bear.h
+1461023323 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\bear.h
 	"Carnivore.h"
 
-1460868692 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\bear.cpp
+1461034291 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\bear.cpp
 	"Bear.h"
 	"TILE.h"
 	<iostream>
 
-1460855045 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\carnivore.cpp
+1461023323 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\carnivore.cpp
 	"Carnivore.h"
 	<iostream>
 
-1460868643 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\wolf.cpp
+1461034291 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\wolf.cpp
 	"Wolf.h"
 	"TILE.h"
 	<iostream>
@@ -1060,4 +1064,176 @@
 	"Wolf.h"
 	"TILE.h"
 	<iostream>
+
+1461040145 c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\include\simplebutton.h
+	<SFML/Graphics.hpp>
+	<iostream>
+
+1461040314 source:c:\users\kamilp\documents\cs474\predators_and_prey\proj_3\src\simplebutton.cpp
+	"simpleButton.h"
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\main.cpp
+	<SFML/Graphics.hpp>
+	"GUI.h"
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\gui.h
+	<SFML/Graphics.hpp>
+	<iostream>
+	"textButton.h"
+	"TILE.h"
+	"Square.h"
+	"Rabbit.h"
+	"Wolf.h"
+	"Bear.h"
+	"Factory.h"
+	"simpleButton.h"
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\textbutton.h
+	<SFML/Graphics.hpp>
+	<iostream>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\tile.h
+	<SFML/Graphics.hpp>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\square.h
+	"TILE.h"
+	"Living_Being.h"
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\living_being.h
+	<SFML/Graphics.hpp>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\rabbit.h
+	"Herbivore.h"
+	<Living_Being.h>
+	<iostream>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\herbivore.h
+	<Living_Being.h>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\wolf.h
+	"Carnivore.h"
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\carnivore.h
+	<Living_Being.h>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\bear.h
+	"Carnivore.h"
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\factory.h
+	"Living_Being.h"
+	"Grass.h"
+	"Flower.h"
+	"Rabbit.h"
+	"Deer.h"
+	"Wolf.h"
+	"Bear.h"
+	"Empty.h"
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\grass.h
+	"Living_Being.h"
+	"Plant.h"
+	<iostream>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\plant.h
+	"Living_Being.h"
+	<SFML/Graphics.hpp>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\flower.h
+	"Plant.h"
+	<iostream>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\deer.h
+	"Herbivore.h"
+	<Living_Being.h>
+	<iostream>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\empty.h
+	"Living_Being.h"
+	"Plant.h"
+	<iostream>
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\simplebutton.h
+	<SFML/Graphics.hpp>
+	<iostream>
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\animals.cpp
+	"Animals.h"
+
+1461086453 c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\include\animals.h
+	"Living_Being.h"
+
+1461110207 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\bear.cpp
+	"Bear.h"
+	"TILE.h"
+	<iostream>
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\carnivore.cpp
+	"Carnivore.h"
+	<iostream>
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\deer.cpp
+	"Deer.h"
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\empty.cpp
+	"Empty.h"
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\factory.cpp
+	"Factory.h"
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\flower.cpp
+	"Flower.h"
+	<iostream>
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\grass.cpp
+	"Grass.h"
+	<iostream>
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\herbivore.cpp
+	"Herbivore.h"
+	"Square.h"
+	<iostream>
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\living_being.cpp
+	"Living_Being.h"
+	<iostream>
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\plant.cpp
+	"Plant.h"
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\rabbit.cpp
+	"Rabbit.h"
+	"Square.h"
+	<iostream>
+	"TILE.h"
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\simplebutton.cpp
+	"simpleButton.h"
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\square.cpp
+	"Square.h"
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\textbutton.cpp
+	"textButton.h"
+
+1461086453 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\tile.cpp
+	"TILE.h"
+
+1461187249 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\wolf.cpp
+	"Wolf.h"
+	"TILE.h"
+	<iostream>
+
+1461111310 source:c:\users\rhayhurst\desktop\tues\predators_and_prey\proj_3\src\gui.cpp
+	"GUI.h"
+	<iostream>
+	<algorithm>
+	<time.h>
+	<ctime>
+	"Grass.h"
+	"Flower.h"
+	"Deer.h"
+	"Wolf.h"
+	"Bear.h"
+	"Rabbit.h"
+	"simpleButton.h"
 

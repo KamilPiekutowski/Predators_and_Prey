@@ -73,6 +73,7 @@
 		<Unit filename="include/Square.h" />
 		<Unit filename="include/TILE.h" />
 		<Unit filename="include/Wolf.h" />
+		<Unit filename="include/simpleButton.h" />
 		<Unit filename="include/textButton.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Animals.cpp" />
@@ -91,6 +92,7 @@
 		<Unit filename="src/Square.cpp" />
 		<Unit filename="src/TILE.cpp" />
 		<Unit filename="src/Wolf.cpp" />
+		<Unit filename="src/simpleButton.cpp" />
 		<Unit filename="src/textButton.cpp" />
 		<Extensions>
 			<code_completion />

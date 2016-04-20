@@ -12,7 +12,7 @@ Bear::Bear()
     set_curr_calories(100);
     set_min_calories_to_eat(170);
     set_metabolic_rate(3);
-    set_reproductive_rate(20);
+    set_reproductive_rate(75);
     set_min_age_to_reproduce(20);
     set_min_calories_to_reproduce(175);
     set_min_calories_to_hunt(30);
