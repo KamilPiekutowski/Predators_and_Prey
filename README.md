@@ -1,5 +1,4 @@
-# Predators and Prey CS474
-
+### Predators and Prey CS474
 It is a predator/prey graphical simulation using graphic GUI driven by SFML library. 
 
 
