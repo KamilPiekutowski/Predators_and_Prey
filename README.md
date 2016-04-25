@@ -1,7 +1,7 @@
 
 ## Predators and Prey CS474
-Robert Hayhurst/Kamil Piekutowski
-CS 474
-University of Illinois at Chicago
-Spring 2016
+Robert Hayhurst/Kamil Piekutowski<br>
+CS 474<br>
+University of Illinois at Chicago<br>
+Spring 2016<br>
 
