@@ -1,9 +1,7 @@
-### Predators and Prey CS474
-It is a predator/prey graphical simulation using graphic GUI driven by SFML library. 
 
-
-## Authors
+## Predators and Prey CS474
 Robert Hayhurst/Kamil Piekutowski
+CS 474
+University of Illinois at Chicago
+Spring 2016
 
-###IDE
-Code::Blocks
