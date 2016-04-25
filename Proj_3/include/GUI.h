@@ -59,11 +59,11 @@ class GUI
             textButton *close = new textButton("Close",24,5,10);
             textButton *start = new textButton("Start",24,100,10);
         */
-        simpleButton *close = new simpleButton("img/close.png",100,700,0);
-        simpleButton *start = new simpleButton("img/play.png",100,100,0);
-        simpleButton *pauseButton = new simpleButton("img/pause.png",100,0,0);
-        simpleButton *decreaseSpeed = new simpleButton("img/backward.png",100,250,0);
-        simpleButton *increaseSpeed = new simpleButton("img/forward.png",100,350,0);
+        simpleButton *close = new simpleButton("img/close.png",50,750,0);
+        simpleButton *start = new simpleButton("img/play.png",50,50,0);
+        simpleButton *pauseButton = new simpleButton("img/pause.png",50,0,0);
+        simpleButton *decreaseSpeed = new simpleButton("img/backward.png",50,150,0);
+        simpleButton *increaseSpeed = new simpleButton("img/forward.png",50,200,0);
 
         Square grid[NUMROWS][NUMCOLS];
         void step();
